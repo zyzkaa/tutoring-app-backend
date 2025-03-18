@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public abstract class UserEntity implements UserDetails {
     private String firstName;
     private String lastName;
     private Date birthDate;
-    private Date creationDate;
+    private Timestamp creationDate;
 
 
     @Override

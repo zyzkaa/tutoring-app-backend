@@ -5,6 +5,8 @@ import com.example.projekt.repository.RegularUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -12,5 +14,9 @@ public class UserService {
 
     public RegularUser createUser(RegularUser user) {
         return regularUserRepository.save(user);
+    }
+
+    public List<RegularUser> getAllUsers() {
+        return regularUserRepository.findAll();
     }
 }

@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -14,11 +16,13 @@ public class UserController {
     private final UserService userService;
     @PostMapping("/add")
     public ResponseEntity<RegularUser> addRegularUser(@RequestBody RegularUserDto user) {
+//        System.out.println(user.toString());
+//        return null;
         return ResponseEntity.ok(userService.createUser(user.toEntity()));
     }
 
     @GetMapping("/test")
-    public String test() {
-        return "test";
+    public List<RegularUser> test() {
+        return userService.getAllUsers();
     }
 }
