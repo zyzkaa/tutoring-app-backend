@@ -1,17 +1,24 @@
 package com.example.projekt.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
-@Entity
+@Entity(name = "teachers")
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Teacher extends User {
 
-    private float hourlyRate;
-
+    @Nullable
     @Column(length = 1000)
     private String description;
 
-    @OneToMany(mappedBy = "teacher")
+    @OneToMany()
     private List<TeacherSubject> subjects;
 }

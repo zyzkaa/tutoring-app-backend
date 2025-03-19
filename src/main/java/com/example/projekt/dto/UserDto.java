@@ -1,6 +1,6 @@
 package com.example.projekt.dto;
 
-import com.example.projekt.model.RegularUser;
+import com.example.projekt.model.Teacher;
 import com.example.projekt.model.User;
 import lombok.*;
 
@@ -11,23 +11,31 @@ import java.sql.Timestamp;
 @ToString
 @RequiredArgsConstructor
 public class UserDto {
-    private String username;
-    private String password;
-    private String email;
-    private String firstName;
-    private String lastName;
-    private Date birthDate;
+    protected String username;
+    protected String password;
+    protected String email;
+    protected String firstName;
+    protected String lastName;
+    protected Date birthDate;
 
-
-    public User toEntity(){
-        return User.builder()
+    private <B extends User.UserBuilder<?, ?>> B fillBuilder(B builder) {
+        return (B) builder
                 .username(this.username)
                 .password(this.password)
                 .email(this.email)
                 .firstName(this.firstName)
                 .lastName(this.lastName)
                 .birthDate(this.birthDate)
-                .creationDate(new Timestamp(System.currentTimeMillis()))
-                .build();
+                .creationDate(new Timestamp(System.currentTimeMillis()));
     }
+
+
+    public User toUserEntity(){
+        return fillBuilder(User.builder()).build();
+    }
+
+    public Teacher toTeacherEntity(){
+        return fillBuilder(Teacher.builder()).build();
+    }
+
 }
