@@ -10,6 +10,7 @@ import java.util.List;
 @Entity
 public class Availability {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public int id;
 
     @ManyToOne

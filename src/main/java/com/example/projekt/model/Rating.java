@@ -7,7 +7,7 @@ import java.util.List;
 @Entity
 public class Rating {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @OneToOne(cascade = CascadeType.REMOVE)
@@ -16,6 +16,6 @@ public class Rating {
     @OneToOne(cascade = CascadeType.REMOVE)
     private Teacher providerUser;
 
-    @OneToMany(mappedBy = "rating")
+    @OneToMany()
     private List<SubjectDict> subjectDict;
 }

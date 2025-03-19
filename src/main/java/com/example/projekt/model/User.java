@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
+@Entity(name = "users")
 @AllArgsConstructor
 @SuperBuilder
 @Setter

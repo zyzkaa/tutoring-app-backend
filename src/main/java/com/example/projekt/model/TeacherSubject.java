@@ -1,15 +1,14 @@
 package com.example.projekt.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.Builder;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Entity
 public class TeacherSubject {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
 
     @OneToOne

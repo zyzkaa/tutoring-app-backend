@@ -10,7 +10,7 @@ public class SubjectDict {
     public String name;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     public int id;
 
 }
