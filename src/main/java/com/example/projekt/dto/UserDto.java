@@ -4,6 +4,7 @@ import com.example.projekt.model.Teacher;
 import com.example.projekt.model.User;
 import lombok.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -18,24 +19,23 @@ public class UserDto {
     protected String lastName;
     protected Date birthDate;
 
-    private <B extends User.UserBuilder<?, ?>> B fillBuilder(B builder) {
-        return (B) builder
-                .username(this.username)
-                .password(this.password)
-                .email(this.email)
-                .firstName(this.firstName)
-                .lastName(this.lastName)
-                .birthDate(this.birthDate)
-                .creationDate(new Timestamp(System.currentTimeMillis()));
-    }
+    public <U extends User> U toEntity(Class<U> entityClass) {
+        try {
+            U result = entityClass.getDeclaredConstructor().newInstance();
 
+            result.setUsername(this.username);
+            result.setPassword(this.password);
+            result.setEmail(this.email);
+            result.setFirstName(this.firstName);
+            result.setLastName(this.lastName);
+            result.setBirthDate(this.birthDate);
+            result.setCreationDate(new Timestamp(System.currentTimeMillis()));
 
-    public User toUserEntity(){
-        return fillBuilder(User.builder()).build();
-    }
+            return result;
 
-    public Teacher toTeacherEntity(){
-        return fillBuilder(Teacher.builder()).build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
