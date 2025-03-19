@@ -15,8 +15,8 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     @PostMapping("/add")
-    public ResponseEntity<User> addRegularUser(@RequestBody UserDto user) {
-        return ResponseEntity.ok(userService.createUser(user.toUserEntity()));
+    public ResponseEntity<User> addUser(@RequestBody UserDto userData) {
+        return ResponseEntity.ok(userService.createUser(userData.toEntity(User.class)));
     }
 
     @GetMapping("/getAll")

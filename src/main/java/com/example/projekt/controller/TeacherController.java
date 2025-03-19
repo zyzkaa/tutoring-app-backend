@@ -17,7 +17,7 @@ public class TeacherController {
     private final TeacherService teacherService;
 
     @PostMapping("/add")
-    public ResponseEntity<Teacher> addTeacher(@RequestBody UserDto teacher) {
-        return ResponseEntity.ok(teacherService.addTeacher(teacher.toTeacherEntity()));
+    public ResponseEntity<Teacher> addTeacher(@RequestBody UserDto teacherData) {
+        return ResponseEntity.ok(teacherService.addTeacher(teacherData.toEntity(Teacher.class)));
     }
 }

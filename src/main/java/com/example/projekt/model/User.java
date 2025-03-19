@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "users")
-@AllArgsConstructor
-@SuperBuilder
+@NoArgsConstructor
 @Setter
+@ToString
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class User implements UserDetails {
     @Id
@@ -34,11 +34,6 @@ public class User implements UserDetails {
     public void prePersist() {
         this.creationDate = new Timestamp(System.currentTimeMillis());
     }
-
-    public User(){
-        id = UUID.randomUUID();
-    }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

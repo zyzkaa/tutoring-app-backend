@@ -5,13 +5,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Entity(name = "teachers")
-@SuperBuilder
 @NoArgsConstructor
+@Setter
 @AllArgsConstructor
 public class Teacher extends User {
 
