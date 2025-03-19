@@ -10,16 +10,17 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
+@Setter
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class UserEntity implements UserDetails {
+public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     private String username;
     private String password;
@@ -28,6 +29,15 @@ public abstract class UserEntity implements UserDetails {
     private String lastName;
     private Date birthDate;
     private Timestamp creationDate;
+
+    @PrePersist
+    public void prePersist() {
+        this.creationDate = new Timestamp(System.currentTimeMillis());
+    }
+
+    public User(){
+        id = UUID.randomUUID();
+    }
 
 
     @Override

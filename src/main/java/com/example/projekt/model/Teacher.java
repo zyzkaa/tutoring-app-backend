@@ -5,14 +5,13 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-public class ProviderUser extends UserEntity {
+public class Teacher extends User {
 
     private float hourlyRate;
 
     @Column(length = 1000)
     private String description;
 
-    @ElementCollection
-    @Enumerated(EnumType.STRING)
-    private List<Subject> subjects;
+    @OneToMany(mappedBy = "teacher")
+    private List<TeacherSubject> subjects;
 }
