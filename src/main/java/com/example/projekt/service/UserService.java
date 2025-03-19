@@ -1,8 +1,7 @@
 package com.example.projekt.service;
 
-import com.example.projekt.model.RegularUser;
-import com.example.projekt.model.UserEntity;
-import com.example.projekt.repository.RegularUserRepository;
+import com.example.projekt.model.User;
+import com.example.projekt.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -10,24 +9,24 @@ import java.util.List;
 
 @Service
 public class UserService {
-    private final RegularUserRepository regularUserRepository;
+    private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserService(RegularUserRepository regularUserRepository) {
-        this.regularUserRepository = regularUserRepository;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
-    private void encodePassword(UserEntity user) {
+    private void encodePassword(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
     }
 
-    public RegularUser createUser(RegularUser user) {
+    public User createUser(User user) {
         encodePassword(user);
-        return regularUserRepository.save(user);
+        return userRepository.save(user);
     }
 
-    public List<RegularUser> getAllUsers() {
-        return regularUserRepository.findAll();
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }

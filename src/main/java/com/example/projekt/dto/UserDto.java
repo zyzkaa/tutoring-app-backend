@@ -1,6 +1,7 @@
 package com.example.projekt.dto;
 
 import com.example.projekt.model.RegularUser;
+import com.example.projekt.model.User;
 import lombok.*;
 
 import java.sql.Date;
@@ -9,7 +10,7 @@ import java.sql.Timestamp;
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class RegularUserDto {
+public class UserDto {
     private String username;
     private String password;
     private String email;
@@ -18,8 +19,8 @@ public class RegularUserDto {
     private Date birthDate;
 
 
-    public RegularUser toEntity(){
-        RegularUser newUser =  RegularUser.builder()
+    public User toEntity(){
+        return User.builder()
                 .username(this.username)
                 .password(this.password)
                 .email(this.email)
@@ -28,8 +29,5 @@ public class RegularUserDto {
                 .birthDate(this.birthDate)
                 .creationDate(new Timestamp(System.currentTimeMillis()))
                 .build();
-
-        System.out.println(newUser);
-        return newUser;
     }
 }
