@@ -29,7 +29,6 @@ public class UserDto {
             result.setFirstName(this.firstName);
             result.setLastName(this.lastName);
             result.setBirthDate(this.birthDate);
-            result.setCreationDate(new Timestamp(System.currentTimeMillis()));
 
             return result;
 

@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 @Entity
 public class WeekdayDict {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int id;
     public String name;
 }

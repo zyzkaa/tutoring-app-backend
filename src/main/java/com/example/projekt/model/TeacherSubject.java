@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 @Entity
 public class TeacherSubject {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @OneToOne
