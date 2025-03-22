@@ -1,6 +1,8 @@
 package com.example.projekt;
 
+import com.example.projekt.service.MyUserDetailsService;
 import com.example.projekt.service.PasswordHelper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,17 +21,17 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final UserDetailsService userDetailsService;
+    MyUserDetailsService myUserDetailsService;
 
-    SecurityConfig(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    SecurityConfig(MyUserDetailsService myUserDetailsService) {
+        this.myUserDetailsService = myUserDetailsService;
     }
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(PasswordHelper.getEncoder());
+        provider.setUserDetailsService(myUserDetailsService);
         return provider;
     }
 
@@ -48,7 +50,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/test").authenticated()
                         .anyRequest().permitAll())
-                .securityContext(context -> context.requireExplicitSave(false));
+                .securityContext(context -> context.requireExplicitSave(false))
+                .logout(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
