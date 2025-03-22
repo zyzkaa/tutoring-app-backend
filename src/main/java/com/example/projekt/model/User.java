@@ -16,6 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Setter
 @ToString
+@Getter
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class User implements UserDetails {
     @Id
@@ -38,16 +39,6 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
-    }
-
-    @Override
-    public String getPassword() {
-        return "";
-    }
-
-    @Override
-    public String getUsername() {
-        return this.username;
     }
 
     @Override

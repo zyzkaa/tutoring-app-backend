@@ -5,19 +5,17 @@ import com.example.projekt.model.Teacher;
 import com.example.projekt.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/teachers")
+@RequestMapping("/teacher")
 @RequiredArgsConstructor
 public class TeacherController {
     private final TeacherService teacherService;
 
-    @PostMapping("/add")
+    @PostMapping("/register")
     public ResponseEntity<Teacher> addTeacher(@RequestBody UserDto teacherData) {
         return ResponseEntity.ok(teacherService.addTeacher(teacherData.toEntity(Teacher.class)));
     }
+
 }
