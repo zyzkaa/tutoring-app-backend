@@ -1,6 +1,7 @@
 package com.example.projekt.controller;
 
 import com.example.projekt.dto.UserDto;
+import com.example.projekt.model.Teacher;
 import com.example.projekt.model.User;
 import com.example.projekt.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,15 @@ public class UserController {
 
     @GetMapping("/getAll")
     public List<User> test() {
-        return userService.getAllUsers();
+        var users = userService.getAllUsers();
+        users.forEach(user -> {
+            if (user instanceof Teacher) {
+                System.out.println("Teacher");
+            } else {
+                System.out.println("User");
+            }
+            System.out.println(user.getUsername());
+        });
+        return users;
     }
 }
