@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
@@ -22,25 +23,14 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationHelper authenticationHelper;
 //    private final AuthenticationConfiguration authenticationConfiguration;
 
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletRequest request) throws Exception {
 //        AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
-
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword())
-            );
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            return ResponseEntity.ok("zalogowano jako " + loginDto.getUsername());
-        } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Błąd logowania: " + e.getMessage());
-        }
+        return authenticationHelper.login(loginDto.getUsername(), loginDto.getPassword(), request);
     }
 
     @PostMapping("/logout")
@@ -54,12 +44,13 @@ public class AuthenticationController {
 
     @GetMapping("/test")
     public String test(HttpServletRequest request) {
+        var username = request.getUserPrincipal().getName();
         if (request.isUserInRole("TEACHER")){
-            return "zalogowano jako teacher";
+            return "zalogowano jako teacher" + username;
         } else if (request.isUserInRole("USER")){
-            return "zalogowano jako user";
+            return "zalogowano jako user " + username;
         } else {
-            return "zalogowano jako huj wie co";
+            return "zalogowano jako ?";
         }
     }
 }

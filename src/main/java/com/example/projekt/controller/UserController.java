@@ -1,11 +1,14 @@
 package com.example.projekt.controller;
 
-import com.example.projekt.dto.UserDto;
+import com.example.projekt.dto.UserRegisterDto;
+import com.example.projekt.dto.UserResponseDto;
 import com.example.projekt.model.Teacher;
 import com.example.projekt.model.User;
 import com.example.projekt.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,9 +18,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final AuthenticationHelper authenticationHelper;
+
     @PostMapping("/register")
-    public ResponseEntity<User> addUser(@RequestBody UserDto userData) {
-        return ResponseEntity.ok(userService.createUser(userData.toEntity(User.class)));
+    public ResponseEntity<UserResponseDto> addUser(@RequestBody UserRegisterDto userData, HttpServletRequest request) {
+        var response = ResponseEntity.ok(userService.createUser(userData.toEntity(User.class)));
+        authenticationHelper.login(userData.getUsername(), userData.getPassword(), request);
+        return response;
     }
 
     @GetMapping("/getAll")
