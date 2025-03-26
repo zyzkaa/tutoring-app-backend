@@ -1,17 +1,15 @@
 package com.example.projekt.dto;
 
-import com.example.projekt.model.Teacher;
 import com.example.projekt.model.User;
 import lombok.*;
 
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
-import java.sql.Timestamp;
 
 @Setter
 @ToString
+@Getter
 @RequiredArgsConstructor
-public class UserDto {
+public class UserRegisterDto {
     protected String username;
     protected String password;
     protected String email;
