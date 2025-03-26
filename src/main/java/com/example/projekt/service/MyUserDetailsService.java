@@ -29,17 +29,14 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Teacher> teacher = teacherRepository.findByUsername(username);
+
         if (teacher.isPresent()) {
-            System.out.println("znalezniono teacher");
             return createUserDetails(teacher.get(), "TEACHER");
         }
 
-        Optional<User> user = userRepository.findByUsername(username);
-        if (user.isPresent()) {
-            System.out.println("znalezniono user");
-            return createUserDetails(user.get(), "USER");
-        }
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        throw new UsernameNotFoundException(username);
+        return createUserDetails(user, "USER");
     }
 }
