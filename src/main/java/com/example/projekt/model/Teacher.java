@@ -3,16 +3,16 @@ package com.example.projekt.model;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Entity(name = "teachers")
 @NoArgsConstructor
 @Setter
+@Getter
 @AllArgsConstructor
 public class Teacher extends User {
 
@@ -20,6 +20,6 @@ public class Teacher extends User {
     @Column(length = 1000)
     private String description;
 
-    @OneToMany()
-    private List<TeacherSubject> subjects;
+    @OneToMany(mappedBy = "teacher")
+    private List<SubjectDetails> subjectDetails;
 }
