@@ -48,8 +48,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/test").authenticated()
-                        .anyRequest().permitAll())
+                        .requestMatchers("/register", "/login").permitAll()
+                        .anyRequest().authenticated())
                 .securityContext(context -> context.requireExplicitSave(false))
                 .logout(AbstractHttpConfigurer::disable);
 
