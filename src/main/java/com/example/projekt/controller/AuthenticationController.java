@@ -1,6 +1,7 @@
 package com.example.projekt.controller;
 
 import com.example.projekt.dto.LoginDto;
+import com.example.projekt.model.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -43,14 +45,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/test")
-    public String test(HttpServletRequest request) {
-        var username = request.getUserPrincipal().getName();
-        if (request.isUserInRole("TEACHER")){
-            return "zalogowano jako teacher" + username;
-        } else if (request.isUserInRole("USER")){
-            return "zalogowano jako user " + username;
-        } else {
-            return "zalogowano jako ?";
-        }
+    public String test(@AuthenticationPrincipal User user) {
+        return user.getUsername();
     }
 }

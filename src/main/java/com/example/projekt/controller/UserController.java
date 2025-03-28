@@ -1,5 +1,6 @@
 package com.example.projekt.controller;
 
+import com.example.projekt.dto.EditUserInfoDto;
 import com.example.projekt.dto.UserRegisterDto;
 import com.example.projekt.dto.UserResponseDto;
 import com.example.projekt.model.Teacher;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,5 +41,11 @@ public class UserController {
             System.out.println(user.getUsername());
         });
         return users;
+    }
+
+    @PatchMapping("/edit-info")
+    public ResponseEntity<UserResponseDto> editInfo(@RequestBody EditUserInfoDto editUserInfoDto, @AuthenticationPrincipal User user) throws IllegalAccessException {
+        System.out.println(user.getId());
+        return ResponseEntity.ok(userService.editUserInfo(user, editUserInfoDto));
     }
 }
