@@ -18,25 +18,16 @@ public class MyUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
     private final TeacherRepository teacherRepository;
 
-    private UserDetails createUserDetails(User user, String role) {
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getUsername())
-                .password(user.getPassword())
-                .roles(role)
-                .build();
-    }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Teacher> teacher = teacherRepository.findByUsername(username);
 
         if (teacher.isPresent()) {
-            return createUserDetails(teacher.get(), "TEACHER");
+            return teacher.get();
         }
 
-        User user = userRepository.findByUsername(username)
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        return createUserDetails(user, "USER");
     }
 }
