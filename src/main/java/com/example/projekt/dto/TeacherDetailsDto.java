@@ -16,9 +16,9 @@ public class TeacherDetailsDto {
     public static class SubjectListDto {
         private int subjectId;
         private List<SchoolPriceDto> schoolPrices;
+        private boolean isMaturaR; // nazwa do zmiany
     }
 
     private String description;
     private List<SubjectListDto> subjects;
-    private boolean isMaturaR; // nazwa do zmiany
 }

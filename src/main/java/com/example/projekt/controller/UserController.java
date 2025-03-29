@@ -1,8 +1,10 @@
 package com.example.projekt.controller;
 
 import com.example.projekt.dto.EditUserInfoDto;
+import com.example.projekt.dto.RatingDto;
 import com.example.projekt.dto.UserRegisterDto;
 import com.example.projekt.dto.UserResponseDto;
+import com.example.projekt.model.Rating;
 import com.example.projekt.model.Teacher;
 import com.example.projekt.model.User;
 import com.example.projekt.service.UserService;
@@ -21,6 +23,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final AuthenticationHelper authenticationHelper;
+
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> addUser(@RequestBody UserRegisterDto userData, HttpServletRequest request) {
@@ -45,7 +48,6 @@ public class UserController {
 
     @PatchMapping("/edit-info")
     public ResponseEntity<UserResponseDto> editInfo(@RequestBody EditUserInfoDto editUserInfoDto, @AuthenticationPrincipal User user) throws IllegalAccessException {
-        System.out.println(user.getId());
         return ResponseEntity.ok(userService.editUserInfo(user, editUserInfoDto));
     }
 }
