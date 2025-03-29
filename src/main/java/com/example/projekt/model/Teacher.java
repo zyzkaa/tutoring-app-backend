@@ -1,5 +1,6 @@
 package com.example.projekt.model;
 
+import com.example.projekt.dto.UserRegisterDto;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,9 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class Teacher extends User {
+    public Teacher(UserRegisterDto userRegisterDto){
+        super(userRegisterDto);
+    }
 
     @Nullable
     @Column(length = 1000)

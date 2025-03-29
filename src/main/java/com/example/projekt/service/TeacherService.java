@@ -2,6 +2,7 @@ package com.example.projekt.service;
 
 import com.example.projekt.dto.TeacherDetailsDto;
 import com.example.projekt.dto.TeacherResponseDto;
+import com.example.projekt.dto.UserRegisterDto;
 import com.example.projekt.exception.UsernameAlreadyExistsException;
 import com.example.projekt.model.SchoolPrice;
 import com.example.projekt.model.SubjectDetails;
@@ -25,12 +26,12 @@ public class TeacherService {
     private final SubjectDictRepository subjectDictRepository;
     private final UserRepository userRepository;
 
-    public TeacherResponseDto addTeacher(Teacher teacherData) {
+    public TeacherResponseDto addTeacher(UserRegisterDto teacherData) {
         if(userRepository.existsByUsername(teacherData.getUsername())) {
             throw new UsernameAlreadyExistsException(teacherData.getUsername());
         }
 
-        Teacher teacher =  teacherRepository.save(PasswordHelper.encodePassword(teacherData));
+        Teacher teacher =  teacherRepository.save(PasswordHelper.encodePassword(new Teacher(teacherData)));
         return new TeacherResponseDto(teacher);
     }
 
@@ -75,5 +76,10 @@ public class TeacherService {
 
         teacherRepository.save(teacher);
         return new TeacherResponseDto(teacher);
+    }
+
+    public TeacherResponseDto getByUsername(String username) {
+        return new TeacherResponseDto(teacherRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("Teacher not found")));
     }
 }

@@ -27,7 +27,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> addUser(@RequestBody UserRegisterDto userData, HttpServletRequest request) {
-        var response = ResponseEntity.ok(userService.createUser(userData.toEntity(User.class)));
+        var response = ResponseEntity.ok(userService.createUser(userData));
         authenticationHelper.login(userData.getUsername(), userData.getPassword(), request);
         return response;
     }

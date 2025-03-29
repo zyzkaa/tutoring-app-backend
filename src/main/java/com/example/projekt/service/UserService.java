@@ -1,6 +1,7 @@
 package com.example.projekt.service;
 
 import com.example.projekt.dto.EditUserInfoDto;
+import com.example.projekt.dto.UserRegisterDto;
 import com.example.projekt.dto.UserResponseDto;
 import com.example.projekt.exception.UsernameAlreadyExistsException;
 import com.example.projekt.model.User;
@@ -19,11 +20,11 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
 
-    public UserResponseDto createUser(User userData) {
+    public UserResponseDto createUser(UserRegisterDto userData) {
         if(userRepository.existsByUsername(userData.getUsername())) {
             throw new UsernameAlreadyExistsException(userData.getUsername());
         }
-        var user = userRepository.save(PasswordHelper.encodePassword(userData));
+        var user = userRepository.save(PasswordHelper.encodePassword(new User(userData)));
         return new UserResponseDto(user);
     }
 

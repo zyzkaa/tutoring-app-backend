@@ -5,6 +5,7 @@ import com.example.projekt.dto.TeacherDetailsDto;
 import com.example.projekt.dto.TeacherResponseDto;
 import com.example.projekt.dto.UserRegisterDto;
 import com.example.projekt.model.Teacher;
+import com.example.projekt.model.User;
 import com.example.projekt.service.RatingService;
 import com.example.projekt.service.TeacherService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,8 +24,8 @@ public class TeacherController {
     private final RatingService ratingService;
 
     @PostMapping("/register")
-    public ResponseEntity<TeacherResponseDto> addTeacher(@RequestBody UserRegisterDto teacherRegisterDto, HttpServletRequest request) {
-        var response = ResponseEntity.ok(teacherService.addTeacher(teacherRegisterDto.toEntity(Teacher.class)));
+    public ResponseEntity<TeacherResponseDto> addTeacher(@RequestBody UserRegisterDto teacherRegisterDto, HttpServletRequest request) { // can be changed to contain user reg. dto and teacher details dto
+        var response = ResponseEntity.ok(teacherService.addTeacher(teacherRegisterDto));
         authenticationHelper.login(teacherRegisterDto.getUsername(), teacherRegisterDto.getPassword(), request);
         return response;
     }
