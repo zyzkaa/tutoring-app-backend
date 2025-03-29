@@ -1,9 +1,11 @@
 package com.example.projekt.controller;
 
+import com.example.projekt.dto.RatingResponseDto;
 import com.example.projekt.dto.TeacherDetailsDto;
 import com.example.projekt.dto.TeacherResponseDto;
 import com.example.projekt.dto.UserRegisterDto;
 import com.example.projekt.model.Teacher;
+import com.example.projekt.service.RatingService;
 import com.example.projekt.service.TeacherService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import java.util.List;
 public class TeacherController {
     private final TeacherService teacherService;
     private final AuthenticationHelper authenticationHelper;
+    private final RatingService ratingService;
 
     @PostMapping("/register")
     public ResponseEntity<TeacherResponseDto> addTeacher(@RequestBody UserRegisterDto teacherRegisterDto, HttpServletRequest request) {
@@ -36,9 +39,13 @@ public class TeacherController {
         return ResponseEntity.ok(teacherService.addDetails(teacherDetailsDto));
     }
 
-//    @GetMapping("/get-with-data")
-//    public ResponseEntity<Teacher> getWithAllData() {
-//        return ResponseEntity.ok(teacherService.getWithAllData("asdasd"));
-//    }
+    @GetMapping("/{username}")
+    public ResponseEntity<TeacherResponseDto> getTeacher(@PathVariable String username) {
+        return ResponseEntity.ok(teacherService.getByUsername(username));
+    }
 
+    @GetMapping("/{username}/ratings")
+    public ResponseEntity<List<RatingResponseDto>> getTeacherRatings(@PathVariable String username) {
+        return ResponseEntity.ok(ratingService.getRatingsByTeacherUsername(username));
+    }
 }
