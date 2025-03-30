@@ -24,7 +24,7 @@ public class RatingService {
     private SubjectDictRepository subjectDictRepository;
 
     @Transactional
-    public RatingResponseDto addRating(RatingDto ratingDto, User user) {
+    public Rating addRating(RatingDto ratingDto, User user) {
         var subjects = new ArrayList<SubjectDict>();
         for (Integer subjectId : ratingDto.getSubjectIds()) {
             subjects.add(subjectDictRepository.findById(subjectId).orElseThrow());
@@ -44,25 +44,17 @@ public class RatingService {
         );
 
         ratingRepository.save(newRating);
-        return new RatingResponseDto(newRating);
+        return newRating;
     }
 
     public List<Rating> getAllRatings() {
         return ratingRepository.findAll();
     }
 
-    public List<RatingResponseDto> getRatingsByTeacherUsername(String username) {
-        var ratings = ratingRepository.findRatingsByTeacher_Username(username)
-                .orElse(null);
+    public List<Rating> getRatingsByTeacherUsername(String username) {
+        List<Rating> ratings = ratingRepository.findRatingsByTeacher_Username(username)
+                .orElse(new ArrayList<Rating>());
 
-        if (ratings == null) { return null; }
-
-        var ratingResponseDtos = new ArrayList<RatingResponseDto>();
-
-        for(Rating rating : ratings){
-            ratingResponseDtos.add(new RatingResponseDto(rating));
-        }
-
-        return ratingResponseDtos;
+        return ratings;
     }
 }

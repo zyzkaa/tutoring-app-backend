@@ -25,7 +25,7 @@ public class RatingController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/add")
     public ResponseEntity<RatingResponseDto> addRating(@RequestBody RatingDto ratingDto, @AuthenticationPrincipal User user){
-        return ResponseEntity.ok(ratingService.addRating(ratingDto, user));
+        return ResponseEntity.ok(new RatingResponseDto(ratingService.addRating(ratingDto, user)));
     }
 
     @GetMapping("/get-all")

@@ -27,12 +27,12 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> addUser(@RequestBody UserRegisterDto userData, HttpServletRequest request) {
-        var response = ResponseEntity.ok(userService.createUser(userData));
+        var user = userService.createUser(userData);
         authenticationHelper.login(userData.getUsername(), userData.getPassword(), request);
-        return response;
+        return ResponseEntity.ok(new UserResponseDto(user));
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/getAll") // do zmiany albo wywalenia
     public List<User> test() {
         var users = userService.getAllUsers();
         users.forEach(user -> {
@@ -48,6 +48,6 @@ public class UserController {
 
     @PatchMapping("/edit-info")
     public ResponseEntity<UserResponseDto> editInfo(@RequestBody EditUserInfoDto editUserInfoDto, @AuthenticationPrincipal User user) throws IllegalAccessException {
-        return ResponseEntity.ok(userService.editUserInfo(user, editUserInfoDto));
+        return ResponseEntity.ok(new UserResponseDto(userService.editUserInfo(user, editUserInfoDto)));
     }
 }

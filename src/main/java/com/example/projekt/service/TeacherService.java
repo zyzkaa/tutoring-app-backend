@@ -26,13 +26,12 @@ public class TeacherService {
     private final SubjectDictRepository subjectDictRepository;
     private final UserRepository userRepository;
 
-    public TeacherResponseDto addTeacher(UserRegisterDto teacherData) {
+    public Teacher addTeacher(UserRegisterDto teacherData) {
         if(userRepository.existsByUsername(teacherData.getUsername())) {
             throw new UsernameAlreadyExistsException(teacherData.getUsername());
         }
 
-        Teacher teacher =  teacherRepository.save(PasswordHelper.encodePassword(new Teacher(teacherData)));
-        return new TeacherResponseDto(teacher);
+        return teacherRepository.save(PasswordHelper.encodePassword(new Teacher(teacherData)));
     }
 
     public List<Teacher> getAllTeachers() {
@@ -41,7 +40,7 @@ public class TeacherService {
 
 
     @Transactional
-    public TeacherResponseDto addDetails(TeacherDetailsDto teacherDetailsDto) {
+    public Teacher addDetails(TeacherDetailsDto teacherDetailsDto) {
         Teacher teacher = teacherRepository.findByUsername("asdasd")
                 .orElseThrow(() -> new EntityNotFoundException("Teacher not found"));
 
@@ -74,8 +73,7 @@ public class TeacherService {
         });
         teacher.setSubjectDetails(subjectList);
 
-        teacherRepository.save(teacher);
-        return new TeacherResponseDto(teacher);
+        return teacherRepository.save(teacher);
     }
 
     public TeacherResponseDto getByUsername(String username) {

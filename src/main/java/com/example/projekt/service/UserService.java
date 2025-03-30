@@ -20,12 +20,11 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
 
-    public UserResponseDto createUser(UserRegisterDto userData) {
+    public User createUser(UserRegisterDto userData) {
         if(userRepository.existsByUsername(userData.getUsername())) {
             throw new UsernameAlreadyExistsException(userData.getUsername());
         }
-        var user = userRepository.save(PasswordHelper.encodePassword(new User(userData)));
-        return new UserResponseDto(user);
+        return userRepository.save(PasswordHelper.encodePassword(new User(userData)));
     }
 
     public List<User> getAllUsers() {
@@ -43,9 +42,8 @@ public class UserService {
         return nullArgsList.toArray(new String[nullArgsList.size()]);
     }
 
-    public UserResponseDto editUserInfo(User user, EditUserInfoDto editUserInfoDto) throws IllegalAccessException {
+    public User editUserInfo(User user, EditUserInfoDto editUserInfoDto) throws IllegalAccessException {
         BeanUtils.copyProperties(editUserInfoDto, user, returnNullArgs(user, editUserInfoDto));
-        userRepository.save(user);
-        return new UserResponseDto(user);
+        return userRepository.save(user);
     }
 }
