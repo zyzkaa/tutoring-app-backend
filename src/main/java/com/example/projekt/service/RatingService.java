@@ -57,4 +57,15 @@ public class RatingService {
 
         return ratings;
     }
+
+    public void deleteById(User user, int id){
+        var rating = ratingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rating not found"));
+
+        if (!user.equals(rating.getUser())) {
+            throw new RuntimeException("Rating cannot be deleted");
+        }
+
+        ratingRepository.delete(rating);
+    }
 }
