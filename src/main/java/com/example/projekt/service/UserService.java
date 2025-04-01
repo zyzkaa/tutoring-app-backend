@@ -2,12 +2,12 @@ package com.example.projekt.service;
 
 import com.example.projekt.dto.EditUserInfoDto;
 import com.example.projekt.dto.UserRegisterDto;
-import com.example.projekt.dto.UserResponseDto;
 import com.example.projekt.exception.UsernameAlreadyExistsException;
 import com.example.projekt.model.User;
 import com.example.projekt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -45,5 +45,10 @@ public class UserService {
     public User editUserInfo(User user, EditUserInfoDto editUserInfoDto) throws IllegalAccessException {
         BeanUtils.copyProperties(editUserInfoDto, user, returnNullArgs(user, editUserInfoDto));
         return userRepository.save(user);
+    }
+
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("No user found with username: " + username));
     }
 }

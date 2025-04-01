@@ -1,17 +1,14 @@
 package com.example.projekt.controller;
 
 import com.example.projekt.dto.EditUserInfoDto;
-import com.example.projekt.dto.RatingDto;
 import com.example.projekt.dto.UserRegisterDto;
-import com.example.projekt.dto.UserResponseDto;
-import com.example.projekt.model.Rating;
+import com.example.projekt.dto.response.UserResponseDto;
 import com.example.projekt.model.Teacher;
 import com.example.projekt.model.User;
 import com.example.projekt.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,8 +43,13 @@ public class UserController {
         return users;
     }
 
-    @PatchMapping("/edit-info")
-    public ResponseEntity<UserResponseDto> editInfo(@RequestBody EditUserInfoDto editUserInfoDto, @AuthenticationPrincipal User user) throws IllegalAccessException {
+    @PutMapping("/info")
+    public ResponseEntity<UserResponseDto> editUserInfo(@RequestBody EditUserInfoDto editUserInfoDto, @AuthenticationPrincipal User user) throws IllegalAccessException {
         return ResponseEntity.ok(new UserResponseDto(userService.editUserInfo(user, editUserInfoDto)));
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<UserResponseDto> getUserInfo(@PathVariable String username) {
+        return ResponseEntity.ok(new UserResponseDto(userService.getUserByUsername(username)));
     }
 }
