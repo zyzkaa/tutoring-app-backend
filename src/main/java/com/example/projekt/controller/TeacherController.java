@@ -1,17 +1,17 @@
 package com.example.projekt.controller;
 
-import com.example.projekt.dto.RatingResponseDto;
+import com.example.projekt.dto.response.RatingResponseDto;
 import com.example.projekt.dto.TeacherDetailsDto;
-import com.example.projekt.dto.TeacherResponseDto;
-import com.example.projekt.dto.UserRegisterDto;
+import com.example.projekt.dto.response.TeacherResponseDto;
+import com.example.projekt.dto.UserDto;
 import com.example.projekt.model.Rating;
 import com.example.projekt.model.Teacher;
-import com.example.projekt.model.User;
 import com.example.projekt.service.RatingService;
 import com.example.projekt.service.TeacherService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -37,14 +37,19 @@ public class TeacherController {
         return ResponseEntity.ok(teacherService.getAllTeachers());
     }
 
-    @PostMapping("/add-details")
-    public ResponseEntity<TeacherResponseDto> addTeacherDetails(@RequestBody TeacherDetailsDto teacherDetailsDto) {
-        return ResponseEntity.ok(new TeacherResponseDto(teacherService.addDetails(teacherDetailsDto)));
+    @PostMapping("/details")
+    public ResponseEntity<TeacherResponseDto> addTeacherDetails(@RequestBody TeacherDetailsDto teacherDetailsDto, @AuthenticationPrincipal Teacher teacher, HttpServletRequest request) {
+        return ResponseEntity.ok(new TeacherResponseDto(teacherService.addDetails(teacherDetailsDto, teacher, request)));
+    }
+
+    @PutMapping("/details")
+    public ResponseEntity<TeacherResponseDto> changeTeacherDetails(@RequestBody TeacherDetailsDto teacherDetailsDto, @AuthenticationPrincipal Teacher teacher, HttpServletRequest request) {
+        return ResponseEntity.ok(new TeacherResponseDto(teacherService.addDetails(teacherDetailsDto, teacher, request)));
     }
 
     @GetMapping("/{username}")
     public ResponseEntity<TeacherResponseDto> getTeacher(@PathVariable String username) {
-        return ResponseEntity.ok(teacherService.getByUsername(username));
+        return ResponseEntity.ok(new TeacherResponseDto(teacherService.getByUsername(username)));
     }
 
     @GetMapping("/{username}/ratings")

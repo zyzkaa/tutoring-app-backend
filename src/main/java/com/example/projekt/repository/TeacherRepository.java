@@ -11,13 +11,4 @@ import java.util.UUID;
 @Repository
 public interface TeacherRepository extends JpaRepository<Teacher, UUID> {
     Optional<Teacher> findByUsername(String username);
-
-//    @Query("""
-//    Select t from teachers t
-//        join fetch t.subjectDetails sd
-//            join fetch sd.subject
-//        where t.username=:username
-//    """)
-//    Optional<Teacher> findWithAllDetails(String username);
-
 }

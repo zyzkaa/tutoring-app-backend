@@ -1,14 +1,14 @@
 package com.example.projekt.service;
 
 import com.example.projekt.dto.TeacherDetailsDto;
-import com.example.projekt.dto.TeacherResponseDto;
-import com.example.projekt.dto.UserRegisterDto;
+import com.example.projekt.dto.UserDto;
 import com.example.projekt.exception.UsernameAlreadyExistsException;
 import com.example.projekt.model.SchoolPrice;
 import com.example.projekt.model.SubjectDetails;
 import com.example.projekt.model.Teacher;
 import com.example.projekt.repository.*;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +21,6 @@ import java.util.List;
 public class TeacherService {
     private final TeacherRepository teacherRepository;
     private final SubjectDetailsRepository subjectDetailsRepository;
-    private final SchoolPriceRepository schoolPriceRepository;
     private final SchoolDictRepository schoolDictRepository;
     private final SubjectDictRepository subjectDictRepository;
     private final UserRepository userRepository;
@@ -40,9 +39,10 @@ public class TeacherService {
 
 
     @Transactional
-    public Teacher addDetails(TeacherDetailsDto teacherDetailsDto) {
-        Teacher teacher = teacherRepository.findByUsername("asdasd")
-                .orElseThrow(() -> new EntityNotFoundException("Teacher not found"));
+    public Teacher addDetails(TeacherDetailsDto teacherDetailsDto, Teacher teacher, HttpServletRequest request) {
+        if(request.getMethod().equals("PUT")) {
+            subjectDetailsRepository.deleteByTeacherId(teacher.getId());
+        }
 
         teacher.setDescription(teacherDetailsDto.getDescription());
 
@@ -57,7 +57,6 @@ public class TeacherService {
                         schoolPrice.getPrice()
                 );
 
-                schoolPriceRepository.save(newSchoolPrice);
                 schoolPriceList.add(newSchoolPrice);
             });
 
@@ -68,16 +67,14 @@ public class TeacherService {
                     teacher
             );
 
-            subjectDetailsRepository.save(newSubject);
             subjectList.add(newSubject);
         });
         teacher.setSubjectDetails(subjectList);
-
         return teacherRepository.save(teacher);
     }
 
-    public TeacherResponseDto getByUsername(String username) {
-        return new TeacherResponseDto(teacherRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("Teacher not found")));
+    public Teacher getByUsername(String username) {
+        return teacherRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("Teacher not found"));
     }
 }
