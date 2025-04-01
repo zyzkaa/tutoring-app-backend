@@ -1,7 +1,6 @@
 package com.example.projekt.service;
 
 import com.example.projekt.dto.RatingDto;
-import com.example.projekt.dto.RatingResponseDto;
 import com.example.projekt.model.Rating;
 import com.example.projekt.model.SubjectDict;
 import com.example.projekt.model.User;

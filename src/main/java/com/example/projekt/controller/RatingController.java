@@ -2,13 +2,11 @@ package com.example.projekt.controller;
 
 import com.example.projekt.RatingSecurity;
 import com.example.projekt.dto.RatingDto;
-import com.example.projekt.dto.RatingResponseDto;
+import com.example.projekt.dto.response.RatingResponseDto;
 import com.example.projekt.model.Rating;
 import com.example.projekt.model.User;
 import com.example.projekt.service.RatingService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.context.annotation.Role;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
