@@ -1,9 +1,8 @@
 package com.example.projekt.model;
 
-import com.example.projekt.dto.UserRegisterDto;
+import com.example.projekt.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,8 +22,8 @@ import java.util.UUID;
 @Getter
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class User implements UserDetails {
-    public User(UserRegisterDto userRegisterDto) {
-        BeanUtils.copyProperties(userRegisterDto, this);
+    public User(UserDto userDto) {
+        BeanUtils.copyProperties(userDto, this);
     }
 
     @Id

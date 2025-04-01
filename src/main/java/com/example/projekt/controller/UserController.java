@@ -1,7 +1,6 @@
 package com.example.projekt.controller;
 
-import com.example.projekt.dto.EditUserInfoDto;
-import com.example.projekt.dto.UserRegisterDto;
+import com.example.projekt.dto.UserDto;
 import com.example.projekt.dto.response.UserResponseDto;
 import com.example.projekt.model.Teacher;
 import com.example.projekt.model.User;
@@ -23,7 +22,7 @@ public class UserController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDto> addUser(@RequestBody UserRegisterDto userData, HttpServletRequest request) {
+    public ResponseEntity<UserResponseDto> addUser(@RequestBody UserDto userData, HttpServletRequest request) {
         var user = userService.createUser(userData);
         authenticationHelper.login(userData.getUsername(), userData.getPassword(), request);
         return ResponseEntity.ok(new UserResponseDto(user));
@@ -43,9 +42,9 @@ public class UserController {
         return users;
     }
 
-    @PutMapping("/info")
-    public ResponseEntity<UserResponseDto> editUserInfo(@RequestBody EditUserInfoDto editUserInfoDto, @AuthenticationPrincipal User user) throws IllegalAccessException {
-        return ResponseEntity.ok(new UserResponseDto(userService.editUserInfo(user, editUserInfoDto)));
+    @PutMapping("/edit")
+    public ResponseEntity<UserResponseDto> editUserInfo(@RequestBody UserDto userDto, @AuthenticationPrincipal User user) throws IllegalAccessException {
+        return ResponseEntity.ok(new UserResponseDto(userService.editUserInfo(userDto, user)));
     }
 
     @GetMapping("/{username}")

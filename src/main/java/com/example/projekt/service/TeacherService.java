@@ -26,7 +26,7 @@ public class TeacherService {
     private final SubjectDictRepository subjectDictRepository;
     private final UserRepository userRepository;
 
-    public Teacher addTeacher(UserRegisterDto teacherData) {
+    public Teacher addTeacher(UserDto teacherData) {
         if(userRepository.existsByUsername(teacherData.getUsername())) {
             throw new UsernameAlreadyExistsException(teacherData.getUsername());
         }

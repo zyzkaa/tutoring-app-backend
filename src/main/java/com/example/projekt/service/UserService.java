@@ -1,7 +1,6 @@
 package com.example.projekt.service;
 
-import com.example.projekt.dto.EditUserInfoDto;
-import com.example.projekt.dto.UserRegisterDto;
+import com.example.projekt.dto.UserDto;
 import com.example.projekt.exception.UsernameAlreadyExistsException;
 import com.example.projekt.model.User;
 import com.example.projekt.repository.UserRepository;
@@ -20,7 +19,7 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User createUser(UserRegisterDto userData) {
+    public User createUser(UserDto userData) {
         if(userRepository.existsByUsername(userData.getUsername())) {
             throw new UsernameAlreadyExistsException(userData.getUsername());
         }
@@ -31,19 +30,19 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public static String[] returnNullArgs(User user, EditUserInfoDto userInfo) throws IllegalAccessException {
+    public static String[] returnNullArgs(User user, UserDto userDto) throws IllegalAccessException {
         var nullArgsList = new ArrayList<String>();
-        for(Field field : userInfo.getClass().getDeclaredFields()) {
+        for(Field field : userDto.getClass().getDeclaredFields()) {
             field.setAccessible(true);
-            if(field.get(userInfo) == null){
+            if(field.get(userDto) == null){
                 nullArgsList.add(field.getName());
             }
         }
         return nullArgsList.toArray(new String[nullArgsList.size()]);
     }
 
-    public User editUserInfo(User user, EditUserInfoDto editUserInfoDto) throws IllegalAccessException {
-        BeanUtils.copyProperties(editUserInfoDto, user, returnNullArgs(user, editUserInfoDto));
+    public User editUserInfo(UserDto userDto, User user) throws IllegalAccessException {
+        BeanUtils.copyProperties(userDto, user, returnNullArgs(user, userDto));
         return userRepository.save(user);
     }
 

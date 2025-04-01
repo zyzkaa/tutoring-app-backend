@@ -26,7 +26,7 @@ public class TeacherController {
     private final RatingService ratingService;
 
     @PostMapping("/register")
-    public ResponseEntity<TeacherResponseDto> addTeacher(@RequestBody UserRegisterDto teacherRegisterDto, HttpServletRequest request) { // can be changed to contain user reg. dto and teacher details dto
+    public ResponseEntity<TeacherResponseDto> addTeacher(@RequestBody UserDto teacherRegisterDto, HttpServletRequest request) { // can be changed to contain user reg. dto and teacher details dto
         var teacher = teacherService.addTeacher(teacherRegisterDto);
         authenticationHelper.login(teacherRegisterDto.getUsername(), teacherRegisterDto.getPassword(), request);
         return ResponseEntity.ok(new TeacherResponseDto(teacher));

@@ -1,8 +1,6 @@
 package com.example.projekt.dto;
 
-import com.example.projekt.model.User;
 import lombok.*;
-import org.springframework.beans.BeanUtils;
 
 import java.sql.Date;
 
@@ -10,7 +8,7 @@ import java.sql.Date;
 @ToString
 @Getter
 @RequiredArgsConstructor
-public class UserRegisterDto {
+public class UserDto {
     protected String username;
     protected String password;
     protected String email;

@@ -1,8 +1,11 @@
 package com.example.projekt.model;
 
-import com.example.projekt.dto.UserRegisterDto;
+import com.example.projekt.dto.UserDto;
 import jakarta.annotation.Nullable;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +13,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,8 +23,8 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class Teacher extends User {
-    public Teacher(UserRegisterDto userRegisterDto){
-        super(userRegisterDto);
+    public Teacher(UserDto userDto){
+        super(userDto);
     }
 
     @Nullable
