@@ -1,4 +1,4 @@
-package com.example.projekt.dto;
+package com.example.projekt.dto.response;
 
 import com.example.projekt.model.User;
 import lombok.Data;
@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.UUID;
 
 @Data

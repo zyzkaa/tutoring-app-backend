@@ -1,13 +1,10 @@
-package com.example.projekt.dto;
+package com.example.projekt.dto.response;
 
 import com.example.projekt.model.Rating;
 import com.example.projekt.model.SubjectDict;
-import com.example.projekt.model.Teacher;
-import com.example.projekt.model.User;
 import lombok.Data;
 
 import java.util.List;
-import java.util.UUID;
 
 @Data
 public class RatingResponseDto {
