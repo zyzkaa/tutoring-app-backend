@@ -1,6 +1,5 @@
 package com.example.projekt.controller;
 
-import com.example.projekt.RatingSecurity;
 import com.example.projekt.dto.RatingDto;
 import com.example.projekt.dto.response.RatingResponseDto;
 import com.example.projekt.model.Rating;
@@ -20,7 +19,6 @@ import java.util.List;
 @AllArgsConstructor
 public class RatingController {
     private final RatingService ratingService;
-    private final RatingSecurity ratingSecurity;
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/add")
@@ -33,10 +31,9 @@ public class RatingController {
         return ResponseEntity.ok(ratingService.getAllRatings());
     }
 
-    @PreAuthorize("@ratingSecurity.isOwner(#user, #id)")
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteRating(@PathVariable int id, @AuthenticationPrincipal User user){
+    public ResponseEntity<String> deleteRating(@PathVariable int id, @AuthenticationPrincipal User user){
         ratingService.deleteById(user, id);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

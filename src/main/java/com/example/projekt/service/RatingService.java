@@ -51,10 +51,8 @@ public class RatingService {
     }
 
     public List<Rating> getRatingsByTeacherUsername(String username) {
-        List<Rating> ratings = ratingRepository.findRatingsByTeacher_Username(username)
+        return ratingRepository.findRatingsByTeacher_Username(username)
                 .orElse(new ArrayList<Rating>());
-
-        return ratings;
     }
 
     public void deleteById(User user, int id){
