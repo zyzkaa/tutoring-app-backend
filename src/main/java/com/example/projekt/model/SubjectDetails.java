@@ -21,10 +21,10 @@ public class SubjectDetails {
         this.schoolPrices = schoolPrices;
         this.teacher = teacher;
     }
-    @OneToOne
+    @ManyToOne
     private SubjectDict subject;
 
-    @ManyToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<SchoolPrice> schoolPrices;
 
     @Column(columnDefinition = "boolean default false")

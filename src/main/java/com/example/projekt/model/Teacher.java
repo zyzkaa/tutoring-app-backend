@@ -29,10 +29,10 @@ public class Teacher extends User {
 
     @Nullable
     @Column(length = 1000)
-    private String description;
+    private String description = "";
 
-    @OneToMany(mappedBy = "teacher")
-    private List<SubjectDetails> subjectDetails;
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
+    private List<SubjectDetails> subjectDetails = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

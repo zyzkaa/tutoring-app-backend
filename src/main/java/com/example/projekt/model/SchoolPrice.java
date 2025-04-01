@@ -22,7 +22,8 @@ public class SchoolPrice {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    private double price;
+
     @ManyToOne
     private SchoolDict school;
-    private double price;
 }
