@@ -9,12 +9,3 @@ INSERT INTO subject_dict (name) VALUES ('History');
 INSERT INTO subject_dict (name) VALUES ('Biology');
 INSERT INTO subject_dict (name) VALUES ('Chemistry');
 INSERT INTO subject_dict (name) VALUES ('English');
-
-INSERT INTO weekday_dict (name) VALUES ('Monday');
-INSERT INTO weekday_dict (name) VALUES ('Tuesday');
-INSERT INTO weekday_dict (name) VALUES ('Wednesday');
-INSERT INTO weekday_dict (name) VALUES ('Thursday');
-INSERT INTO weekday_dict (name) VALUES ('Friday');
-INSERT INTO weekday_dict (name) VALUES ('Saturday');
-INSERT INTO weekday_dict (name) VALUES ('Sunday');
-
