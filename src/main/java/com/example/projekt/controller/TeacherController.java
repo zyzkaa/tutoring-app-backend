@@ -32,10 +32,32 @@ public class TeacherController {
         return ResponseEntity.ok(new TeacherResponseDto(teacher));
     }
 
-    @GetMapping("/get-all") // delete or edit this
+    // brak przedmiotu -> minimalna cena
+    // nauczyciel dodaj lokalizacja miasto, dzielnica, kilka, dodawanie lokaliacji do bazy do tabelin slownikowej
+    // real time wyszukiwanie z serwera // jak nie to wysylaj wszystko
+    // get all lokalicaje
+    // szukanie po przedmiocie
+    // avg rating
+    // rating 0-5
+    // paginacja
+    // get przedmioty
+    @GetMapping("/get-all") // do wyszukiwarki,
     public ResponseEntity<List<Teacher>> getAllTeacher() {
         return ResponseEntity.ok(teacherService.getAllTeachers());
     }
+
+    // get all uczniowe z ktorymi mialem zajecia
+    // dodaj z nich uczniow do swoich
+
+    //ilosc opini, godzin, zariobionych pieniedzy, ilosc uczniow przypisanych
+    // wejzd na figme
+
+    //dodaj platnosci
+    // przy zakonczeniu
+    // automatyczne konczenie lekcji i dodawanie platnosci
+
+
+
 
     @PostMapping("/details")
     public ResponseEntity<TeacherResponseDto> addTeacherDetails(@RequestBody TeacherDetailsDto teacherDetailsDto, @AuthenticationPrincipal Teacher teacher, HttpServletRequest request) {
