@@ -27,20 +27,25 @@ public class LessonController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}") // mabye delete this????
-    public ResponseEntity<LessonSlot> bookSlot(@PathVariable Long id, @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(lessonService.bookLessonSlot(id, user));
-    }
+//    @PatchMapping("/{id}") // mabye delete this????
+//    public ResponseEntity<LessonSlot> bookSlot(@PathVariable Long id, @AuthenticationPrincipal User user) {
+//        return ResponseEntity.ok(lessonService.bookLessonSlot(id, user));
+//    }
 
     @PreAuthorize("hasRole('USER')")
-    @PatchMapping("/book")
-    public ResponseEntity<List<LessonSlot>> bookSlots(@RequestBody List<Long> idList, @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(lessonService.bookLessonSlots(user, idList));
+    @PatchMapping("/book/{subjectId}/{schoolId}")
+    public ResponseEntity<List<LessonSlot>> bookSlots(@RequestBody List<Integer> idList, @AuthenticationPrincipal User user, @PathVariable int subjectId, @PathVariable int schoolId) {
+        return ResponseEntity.ok(lessonService.bookLessonSlots(user, idList, subjectId, schoolId));
     }
 
-    @DeleteMapping("/{id}") // change to list of ids?
+    @PatchMapping("/{id}") // change to list of ids?
     public ResponseEntity<String> unbookSlot(@PathVariable Long id, @AuthenticationPrincipal User user) {
         lessonService.unbookLessonSlot(id, user);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}") // only for teacher, maybe change to list of ids
+    public ResponseEntity<LessonSlot> cancelSlot(@PathVariable Long id, @AuthenticationPrincipal Teacher teacher) {
+        return ResponseEntity.ok(lessonService.cancellLessonSlot(id, teacher));
     }
 }

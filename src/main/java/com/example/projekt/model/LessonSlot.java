@@ -36,6 +36,11 @@ public class LessonSlot {
 
     private LocalDate date;
     private LocalTime time;
+    private double price;
+    @ManyToOne
+    private SchoolDict school;
+    @ManyToOne
+    private SubjectDict subject;
 
     @Enumerated(EnumType.STRING)
     private LessonState state;

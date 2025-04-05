@@ -20,11 +20,15 @@ public class SubjectDetails {
         this.subject = subject;
         this.schoolPrices = schoolPrices;
         this.teacher = teacher;
+        for(SchoolPrice sp : schoolPrices) {
+            sp.setSubjectDetails(this);
+        }
     }
     @ManyToOne
     private SubjectDict subject;
 
-    @OneToMany(cascade = CascadeType.ALL)
+//    @OneToMany(cascade = CascadeType.ALL, )
+    @OneToMany(mappedBy = "subjectDetails", cascade = CascadeType.ALL)
     private List<SchoolPrice> schoolPrices;
 
     @Column(columnDefinition = "boolean default false")
