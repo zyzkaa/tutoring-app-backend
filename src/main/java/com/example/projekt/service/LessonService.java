@@ -24,6 +24,9 @@ public class LessonService {
         for (LessonSlotDto day : lessonSlotDto) {
             var date = day.getDate();
             for (LocalTime time : day.getTimeList()) {
+                if(lessonSlotRepository.existsLessonSlotByDateAndTimeAndTeacher(date, time, teacher)){
+                    throw new RuntimeException("Lesson slot for " + date + " " + time + "already exists");
+                }
                 lessonSlotRepository.save(new LessonSlot(teacher, date, time, LessonState.AVAILABLE));
             }
         }
