@@ -39,5 +39,5 @@ public class Teacher extends User {
     }
 
     @ManyToMany
-    private List<Location> locations;
+    private List<Location> locations = new ArrayList<>();
 }

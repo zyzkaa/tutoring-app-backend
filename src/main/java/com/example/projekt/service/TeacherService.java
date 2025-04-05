@@ -3,10 +3,7 @@ package com.example.projekt.service;
 import com.example.projekt.dto.TeacherDetailsDto;
 import com.example.projekt.dto.UserDto;
 import com.example.projekt.exception.UsernameAlreadyExistsException;
-import com.example.projekt.model.Location;
-import com.example.projekt.model.SchoolPrice;
-import com.example.projekt.model.SubjectDetails;
-import com.example.projekt.model.Teacher;
+import com.example.projekt.model.*;
 import com.example.projekt.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -42,10 +40,7 @@ public class TeacherService {
 
     @Transactional
     public Teacher addDetails(TeacherDetailsDto teacherDetailsDto, Teacher teacher, HttpServletRequest request) {
-        if(request.getMethod().equals("PUT")) {
-            subjectDetailsRepository.deleteByTeacherId(teacher.getId());
-        }
-
+        subjectDetailsRepository.deleteByTeacherId(teacher.getId()); // se if it works
         teacher.setDescription(teacherDetailsDto.getDescription());
 
         var subjectList = new ArrayList<SubjectDetails>();
@@ -76,7 +71,8 @@ public class TeacherService {
         var locationList = new ArrayList<Location>();
         for(TeacherDetailsDto.LocationDto locationDto : teacherDetailsDto.getLocations()) {
             var location = locationRepository.findLocationByTownAndDistrict(locationDto.getTown(), locationDto.getDistrict())
-                    .orElse(new Location(locationDto.getTown(), locationDto.getDistrict()));
+                    .orElseGet(() -> locationRepository.save(new Location(locationDto.getTown(), locationDto.getDistrict())));
+
             locationList.add(location);
         }
         teacher.setLocations(locationList); // will the new ones save?????????????
