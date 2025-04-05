@@ -21,4 +21,11 @@ public class TeacherDetailsDto {
 
     private String description;
     private List<SubjectListDto> subjects;
+
+    @Data
+    public static class LocationDto {
+        private String town;
+        private String district;
+    }
+    private List<LocationDto> locations;
 }

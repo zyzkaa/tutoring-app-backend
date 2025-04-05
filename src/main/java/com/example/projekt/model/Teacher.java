@@ -2,10 +2,7 @@ package com.example.projekt.model;
 
 import com.example.projekt.dto.UserDto;
 import jakarta.annotation.Nullable;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,4 +37,7 @@ public class Teacher extends User {
                 new SimpleGrantedAuthority("ROLE_TEACHER")
         );
     }
+
+    @ManyToMany
+    private List<Location> locations;
 }

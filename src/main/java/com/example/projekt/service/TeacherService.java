@@ -3,6 +3,7 @@ package com.example.projekt.service;
 import com.example.projekt.dto.TeacherDetailsDto;
 import com.example.projekt.dto.UserDto;
 import com.example.projekt.exception.UsernameAlreadyExistsException;
+import com.example.projekt.model.Location;
 import com.example.projekt.model.SchoolPrice;
 import com.example.projekt.model.SubjectDetails;
 import com.example.projekt.model.Teacher;
@@ -24,6 +25,7 @@ public class TeacherService {
     private final SchoolDictRepository schoolDictRepository;
     private final SubjectDictRepository subjectDictRepository;
     private final UserRepository userRepository;
+    private final LocationRepository locationRepository;
 
     public Teacher addTeacher(UserDto teacherData) {
         if(userRepository.existsByUsername(teacherData.getUsername())) {
@@ -70,6 +72,15 @@ public class TeacherService {
             subjectList.add(newSubject);
         });
         teacher.setSubjectDetails(subjectList);
+
+        var locationList = new ArrayList<Location>();
+        for(TeacherDetailsDto.LocationDto locationDto : teacherDetailsDto.getLocations()) {
+            var location = locationRepository.findLocationByTownAndDistrict(locationDto.getTown(), locationDto.getDistrict())
+                    .orElse(new Location(locationDto.getTown(), locationDto.getDistrict()));
+            locationList.add(location);
+        }
+        teacher.setLocations(locationList); // will the new ones save?????????????
+
         return teacherRepository.save(teacher);
     }
 
