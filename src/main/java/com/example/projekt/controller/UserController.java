@@ -14,19 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
     private final AuthenticationHelper authenticationHelper;
-
-
-    @PostMapping("/register")
-    public ResponseEntity<UserResponseDto> addUser(@RequestBody UserDto userData, HttpServletRequest request) {
-        var user = userService.createUser(userData);
-        authenticationHelper.login(userData.getUsername(), userData.getPassword(), request);
-        return ResponseEntity.ok(new UserResponseDto(user));
-    }
 
     @GetMapping("/getAll") // do zmiany albo wywalenia
     public List<User> test() {
@@ -42,9 +34,14 @@ public class UserController {
         return users;
     }
 
-    @PutMapping("/edit")
+    @PutMapping("/me")
     public ResponseEntity<UserResponseDto> editUserInfo(@RequestBody UserDto userDto, @AuthenticationPrincipal User user) throws IllegalAccessException {
         return ResponseEntity.ok(new UserResponseDto(userService.editUserInfo(userDto, user)));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDto> getCurrentUserInfo(@AuthenticationPrincipal User user) {
+        return null;
     }
 
     @GetMapping("/{username}")

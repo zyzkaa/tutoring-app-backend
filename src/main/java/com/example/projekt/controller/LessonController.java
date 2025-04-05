@@ -36,7 +36,7 @@ public class LessonController {
         return ResponseEntity.ok(lessonService.bookLessonSlots(user, idList));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") // change to list of ids?
     public ResponseEntity<String> unbookSlot(@PathVariable Long id, @AuthenticationPrincipal User user) {
         lessonService.unbookLessonSlot(id, user);
         return new ResponseEntity<>(HttpStatus.OK);

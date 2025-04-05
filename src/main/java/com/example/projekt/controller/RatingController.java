@@ -26,7 +26,7 @@ public class RatingController {
         return ResponseEntity.ok(new RatingResponseDto(ratingService.addRating(ratingDto, user)));
     }
 
-    @GetMapping("/get-all")
+    @GetMapping("/get-all") // delete this
     public ResponseEntity<List<Rating>> getAll(){
         return ResponseEntity.ok(ratingService.getAllRatings());
     }
