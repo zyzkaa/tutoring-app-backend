@@ -30,9 +30,16 @@ public class TeacherController {
         return ResponseEntity.ok(teacherService.getAllTeachers());
     }
 
+    @PreAuthorize("hasRole('TEACHER')")
     @PutMapping("/me")
     public ResponseEntity<TeacherResponseDto> changeTeacherDetails(@RequestBody TeacherDetailsDto teacherDetailsDto, @AuthenticationPrincipal Teacher teacher, HttpServletRequest request) {
         return ResponseEntity.ok(new TeacherResponseDto(teacherService.addDetails(teacherDetailsDto, teacher, request)));
+    }
+
+    @PreAuthorize("hasRole('TEACHER')")
+    @GetMapping("/me")
+    public ResponseEntity<TeacherResponseDto> getCurrentTeacherInfo(@AuthenticationPrincipal Teacher teacher, HttpServletRequest request) {
+        return null;
     }
 
     @GetMapping("/{username}") // make it return all profile data

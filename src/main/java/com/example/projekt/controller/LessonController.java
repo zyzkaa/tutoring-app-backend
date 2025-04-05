@@ -20,6 +20,7 @@ import java.util.List;
 public class LessonController {
     private final LessonService lessonService;
 
+    @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("/add")
     public ResponseEntity<String> addSlots(@RequestBody List<LessonSlotDto> lessonSlotDto, @AuthenticationPrincipal Teacher teacher) {
         lessonService.addLessonSlots(lessonSlotDto, teacher);
@@ -31,6 +32,7 @@ public class LessonController {
         return ResponseEntity.ok(lessonService.bookLessonSlot(id, user));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PatchMapping("/book")
     public ResponseEntity<List<LessonSlot>> bookSlots(@RequestBody List<Long> idList, @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(lessonService.bookLessonSlots(user, idList));
