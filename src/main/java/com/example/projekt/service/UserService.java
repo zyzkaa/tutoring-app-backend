@@ -20,8 +20,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User createUser(UserDto userData) {
-        if(userRepository.existsByUsername(userData.getUsername())) {
-            throw new UsernameAlreadyExistsException(userData.getUsername());
+        if(userRepository.existsByUsername(userData.username())) {
+            throw new UsernameAlreadyExistsException(userData.username());
         }
         return userRepository.save(PasswordHelper.encodePassword(new User(userData)));
     }

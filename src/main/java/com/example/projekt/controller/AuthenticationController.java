@@ -32,7 +32,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletRequest request) throws Exception {
 //        AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
-        return authenticationHelper.login(loginDto.getUsername(), loginDto.getPassword(), request);
+        return authenticationHelper.login(loginDto.username(), loginDto.password(), request);
     }
 
     @PostMapping("/logout")
@@ -47,14 +47,14 @@ public class AuthenticationController {
     @PostMapping("/user/register")
     public ResponseEntity<UserResponseDto> addUser(@RequestBody UserDto userData, HttpServletRequest request) {
         var user = userService.createUser(userData);
-        authenticationHelper.login(userData.getUsername(), userData.getPassword(), request);
+        authenticationHelper.login(userData.username(), userData.password(), request);
         return ResponseEntity.ok(new UserResponseDto(user));
     }
 
     @PostMapping("/teacher/register")
-    public ResponseEntity<TeacherResponseDto> addTeacher(@RequestBody UserDto teacherRegisterDto, HttpServletRequest request) { // can be changed to contain user reg. dto and teacher details dto
+    public ResponseEntity<TeacherResponseDto> addTeacher(@RequestBody UserDto teacherRegisterDto, HttpServletRequest request) {
         var teacher = teacherService.addTeacher(teacherRegisterDto);
-        authenticationHelper.login(teacherRegisterDto.getUsername(), teacherRegisterDto.getPassword(), request);
+        authenticationHelper.login(teacherRegisterDto.username(), teacherRegisterDto.password(), request);
         return ResponseEntity.ok(new TeacherResponseDto(teacher));
     }
 

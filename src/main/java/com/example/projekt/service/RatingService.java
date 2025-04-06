@@ -20,30 +20,13 @@ import java.util.UUID;
 public class RatingService {
     private RatingRepository ratingRepository;
     private TeacherRepository teacherRepository;
-    private SubjectDictRepository subjectDictRepository;
 
     @Transactional
     public Rating addRating(RatingDto ratingDto, User user) {
-        var subjects = new ArrayList<SubjectDict>();
-        for (Integer subjectId : ratingDto.getSubjectIds()) {
-            subjects.add(subjectDictRepository.findById(subjectId).orElseThrow());
-        }
-
-
-        var teacher = teacherRepository.findById(UUID.fromString(ratingDto.getTeacherId()))
+        var teacher = teacherRepository.findById(UUID.fromString(ratingDto.teacherId()))
                 .orElseThrow();
 
-
-        var newRating  = new Rating(
-                ratingDto.getValue(),
-                user,
-                teacher,
-                subjects,
-                ratingDto.getContent()
-        );
-
-        ratingRepository.save(newRating);
-        return newRating;
+        return ratingRepository.save(new Rating(ratingDto, user, teacher));
     }
 
     public List<Rating> getAllRatings() {
