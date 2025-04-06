@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @NotBlank
     private String town;
     private String district;

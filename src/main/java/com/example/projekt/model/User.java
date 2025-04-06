@@ -3,6 +3,7 @@ package com.example.projekt.model;
 import com.example.projekt.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,8 +31,10 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+//    @Column(unique = true)
     private String username;
     private String password;
+//    @Column(unique = true)
     private String email;
     private String firstName;
     private String lastName;

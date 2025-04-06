@@ -3,6 +3,7 @@ package com.example.projekt.repository;
 import com.example.projekt.dto.TeacherProfileDataDto;
 import com.example.projekt.model.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface TeacherRepository extends JpaRepository<Teacher, UUID> {
+public interface TeacherRepository extends JpaRepository<Teacher, UUID>, JpaSpecificationExecutor<Teacher>{
     Optional<Teacher> findByUsername(String username);
 
     @Query("""
@@ -38,13 +39,4 @@ public interface TeacherRepository extends JpaRepository<Teacher, UUID> {
 
     Teacher getTeacherById(UUID id);
 
-//    List<Teacher> findBySubjectWithAvgRating(Integer subjectId);
-//
-//    @Query("""
-//    select new com.example.projekt.dto.response.TeacherWithRatingAndPrice(t.id, t.firstName, t.lastName, avg(r.value), 0.0)
-//    from teachers t
-//        left join ratings r on r.teacher.id = t.id
-//        left join subject_details sd on sd.teacher.id = t.id
-//            group by t.id""")
-//    List<TeacherWithRatingAndPrice> findWithAvgRating();
 }

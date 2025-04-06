@@ -1,12 +1,15 @@
 package com.example.projekt.service;
 
 import com.example.projekt.dto.TeacherDetailsDto;
+import com.example.projekt.dto.TeacherFilter;
 import com.example.projekt.dto.UserDto;
 import com.example.projekt.dto.response.*;
 import com.example.projekt.exception.UsernameAlreadyExistsException;
 import com.example.projekt.model.*;
 import com.example.projekt.repository.*;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +32,7 @@ public class TeacherService {
     private final LessonSlotRepository lessonSlotRepository;
     private final PaymentRepository paymentRepository;
     private final PinnedStudentRepository pinnedStudentRepository;
+    private final EntityManager entityManager;
 
     public Teacher addTeacher(UserDto teacherData) {
         if(userRepository.existsByUsername(teacherData.username())) {
@@ -116,7 +119,7 @@ public class TeacherService {
     }
 
     @Transactional
-    public Teacher pinStudentFromLesson(Long lessonId, Teacher teacher) {
+    public void pinStudentFromLesson(Long lessonId, Teacher teacher) {
         var lesson = lessonSlotRepository.findLessonSlotById(lessonId)
                 .orElseThrow(() -> new EntityNotFoundException("Lesson not found"));
 
@@ -126,16 +129,88 @@ public class TeacherService {
         }
 
         sessionTeacher.getStudents().add(new PinnedStudent(lesson.getStudent(), lesson.getSubject(), teacher));
-        return teacherRepository.save(teacher);
+        teacherRepository.save(teacher);
     }
 
-    public Teacher unpinStudent(Long pinId, Teacher teacher) {
+    public void unpinStudent(Long pinId, Teacher teacher) {
         var pin = pinnedStudentRepository.findPinnedStudentById(pinId)
                 .orElseThrow(() -> new EntityNotFoundException("Pinned student not found"));
         var sessionTeacher = teacherRepository.getTeacherById(teacher.getId());
         if(!sessionTeacher.getStudents().remove(pin)){
             throw new EntityNotFoundException("Sudent not pinned to this teacher");
         }
-        return teacherRepository.save(sessionTeacher);
+        teacherRepository.save(sessionTeacher);
+    }
+
+    public List<Teacher> findTeachers(TeacherFilter teacherFilter) {
+//        Specification<Teacher> specification = Specification.where(null);
+//        specification = specification.and(TeacherSpecification.hasSubject(teacherFilter.subjectId()));
+//        return teacherRepository.findAll(specification);
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Teacher> teacherCriteria = cb.createQuery(Teacher.class);
+        Root<Teacher> teacherRoot = teacherCriteria.from(Teacher.class);
+
+        Join<Teacher, SubjectDetails> subjectDetails = teacherRoot.join("subjectDetails", JoinType.LEFT);
+        Join<SubjectDetails, SubjectDict> subject = subjectDetails.join("subject", JoinType.LEFT);
+        Join<SubjectDetails, SchoolPrice> schoolPrices = subjectDetails.join("schoolPrices", JoinType.LEFT);
+        Join<SchoolPrice, SchoolDict> schoolDict = schoolPrices.join("school", JoinType.LEFT);
+        Join<Teacher, Location> location = teacherRoot.join("locations", JoinType.LEFT);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        if(teacherFilter.locationId() != null && !teacherFilter.locationId().isEmpty()){
+            predicates.add(location.get("id").in(teacherFilter.locationId()));
+        }
+
+        if(teacherFilter.subjectId() != null){
+            predicates.add(cb.equal(subject.get("id"), teacherFilter.subjectId()));
+        }
+
+        if(teacherFilter.schoolId() != null){
+            predicates.add(cb.equal(schoolDict.get("id"), teacherFilter.schoolId()));
+        }
+
+        if(teacherFilter.minPrice() != null){
+            if(teacherFilter.subjectId() != null){
+                predicates.add(cb.and(
+                        cb.equal(subject.get("id"), teacherFilter.subjectId()),
+                        cb.greaterThanOrEqualTo(schoolPrices.get("price"), teacherFilter.minPrice())
+                ));
+            } else {
+                predicates.add(cb.greaterThanOrEqualTo(schoolPrices.get("price"), teacherFilter.minPrice()));
+            }
+        }
+
+        if(teacherFilter.maxPrice() != null){
+            if(teacherFilter.subjectId() != null){
+                predicates.add(cb.and(
+                        cb.equal(subject.get("id"), teacherFilter.subjectId()),
+                        cb.lessThanOrEqualTo(schoolPrices.get("price"), teacherFilter.maxPrice())
+                ));
+            } else {
+                predicates.add(cb.greaterThanOrEqualTo(schoolPrices.get("price"), teacherFilter.maxPrice()));
+            }
+        }
+
+        if(!predicates.isEmpty()){
+            teacherCriteria.where(cb.and(predicates.toArray(new Predicate[0])));
+        }
+
+        teacherCriteria.distinct(true);
+        var teachers = entityManager.createQuery(teacherCriteria).getResultList();
+
+        teachers.forEach(teacher -> {
+            teacher.getSubjectDetails().forEach(subjectDetail -> {
+                List<SchoolPrice> filteredSchoolPrice = subjectDetail.getSchoolPrices().stream()
+                        .filter(sp -> (teacherFilter.schoolId() == null || sp.getSchool().getId() == teacherFilter.schoolId())).toList();
+                subjectDetail.setSchoolPrices(filteredSchoolPrice);
+            });
+            List<SubjectDetails> filteredSubjectDetails = teacher.getSubjectDetails().stream()
+                    .filter(sd ->
+                            (teacherFilter.subjectId() == null || sd.getSubject().getId() == teacherFilter.subjectId())).toList();
+            teacher.setSubjectDetails(filteredSubjectDetails);
+        });
+
+        return teachers;
     }
 }

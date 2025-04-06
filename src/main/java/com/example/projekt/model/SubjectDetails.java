@@ -5,12 +5,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity(name = "subject_details")
 @NoArgsConstructor
 @Getter
+@Setter
 public class SubjectDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
