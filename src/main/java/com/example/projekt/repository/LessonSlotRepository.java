@@ -27,4 +27,6 @@ public interface LessonSlotRepository extends JpaRepository<LessonSlot, Integer>
     List<LessonSlot> findLessonSlotByStateAndDateAndTimeBefore(LessonState state, LocalDate date, LocalTime timeBefore);
 
     boolean existsLessonSlotByDateAndTimeAndTeacher(LocalDate date, LocalTime time, Teacher teacher);
+
+    List<LessonSlot> getLessonSlotByStateAndDate(LessonState state, LocalDate date);
 }

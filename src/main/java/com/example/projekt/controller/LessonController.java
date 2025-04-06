@@ -1,10 +1,12 @@
 package com.example.projekt.controller;
 
 import com.example.projekt.dto.LessonSlotDto;
+import com.example.projekt.dto.response.TeacherResponseDto;
 import com.example.projekt.model.LessonSlot;
 import com.example.projekt.model.Teacher;
 import com.example.projekt.model.User;
 import com.example.projekt.service.LessonService;
+import com.example.projekt.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import java.util.List;
 @RequestMapping("/lesson")
 public class LessonController {
     private final LessonService lessonService;
+    private final TeacherService teacherService;
 
     @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("/add")
@@ -48,4 +51,21 @@ public class LessonController {
     public ResponseEntity<LessonSlot> cancelSlot(@PathVariable Long id, @AuthenticationPrincipal Teacher teacher) {
         return ResponseEntity.ok(lessonService.cancellLessonSlot(id, teacher));
     }
+
+    @PreAuthorize("hasRole('TEACHER')")
+    @PostMapping("/{lessonId}/pin")
+    public ResponseEntity<Void> pinStudent(@PathVariable Long lessonId, @AuthenticationPrincipal Teacher teacher) {
+        teacherService.pinStudentFromLesson(lessonId, teacher);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('TEACHER')")
+    @DeleteMapping("/{pinId}/pin")
+    public ResponseEntity<Void> unpinStudent(@PathVariable Long pinId, @AuthenticationPrincipal Teacher teacher) {
+        teacherService.unpinStudent(pinId, teacher);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
 }

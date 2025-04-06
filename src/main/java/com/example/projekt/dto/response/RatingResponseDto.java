@@ -12,7 +12,7 @@ public record RatingResponseDto(
         ShortUserResponseDto user,
         ShortUserResponseDto teacher
 ) {
-    public RatingResponseDto(Rating rating, User user, Teacher teacher){
-        this(rating.getId(), rating.getValue(), rating.getContent(), new ShortUserResponseDto(user), new ShortUserResponseDto(teacher));
+    public RatingResponseDto(Rating rating){
+        this(rating.getId(), rating.getValue(), rating.getContent(), new ShortUserResponseDto(rating.getUser()), new ShortUserResponseDto(rating.getTeacher()));
     }
 }

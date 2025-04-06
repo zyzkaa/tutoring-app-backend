@@ -1,26 +1,27 @@
 package com.example.projekt.controller;
 
 import com.example.projekt.dto.TeacherDetailsDto;
+import com.example.projekt.dto.response.TeacherProfileResponseDto;
 import com.example.projekt.dto.response.TeacherResponseDto;
 import com.example.projekt.model.Teacher;
 import com.example.projekt.service.RatingService;
 import com.example.projekt.service.TeacherService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/teachers")
 @RequiredArgsConstructor
 public class TeacherController {
     private final TeacherService teacherService;
-    private final AuthenticationHelper authenticationHelper;
-    private final RatingService ratingService;
 
     @GetMapping("/{subject}")
     public ResponseEntity<List<Teacher>> getTeachersBySubject(@PathVariable String subject, @RequestParam(required = false) List<String> localization) {
@@ -35,14 +36,29 @@ public class TeacherController {
 
     @PreAuthorize("hasRole('TEACHER')")
     @GetMapping("/me")
-    public ResponseEntity<TeacherResponseDto> getCurrentTeacherInfo(@AuthenticationPrincipal Teacher teacher, HttpServletRequest request) {
-        return null;
+    public ResponseEntity<TeacherProfileResponseDto> getCurrentTeacherInfo(@AuthenticationPrincipal Teacher teacher, HttpServletRequest request) {
+        return ResponseEntity.ok(teacherService.getTeacherProfile(teacher));
     }
 
     @GetMapping("/{username}") // make it return all profile data
     public ResponseEntity<TeacherResponseDto> getTeacherInfo(@PathVariable String username) {
         return ResponseEntity.ok(new TeacherResponseDto(teacherService.getByUsername(username)));
     }
+
+//    @PreAuthorize("hasRole('TEACHER')")
+//    @PostMapping("/students/{id}")
+//    public ResponseEntity<Void> addStudentToList(@PathVariable UUID id, @AuthenticationPrincipal Teacher teacher){
+//        teacherService.addStudentToList(id, teacher);
+//        return ResponseEntity.status(HttpStatus.CREATED).build();
+//    }
+//
+//    @PreAuthorize("hasRole('TEACHER')")
+//    @DeleteMapping("/students/{id}")
+//    public ResponseEntity<Void> removeStudentFromList(@PathVariable UUID id, @AuthenticationPrincipal Teacher teacher){
+//        teacherService.addStudentToList(id, teacher);
+//        return ResponseEntity.ok().build();
+//    }
+
 
 //    @GetMapping("/{username}/ratings")
 //    public ResponseEntity<List<RatingResponseDto>> getTeacherRatings(@PathVariable String username) {

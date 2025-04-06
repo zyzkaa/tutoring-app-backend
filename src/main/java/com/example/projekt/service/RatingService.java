@@ -2,10 +2,8 @@ package com.example.projekt.service;
 
 import com.example.projekt.dto.RatingDto;
 import com.example.projekt.model.Rating;
-import com.example.projekt.model.SubjectDict;
 import com.example.projekt.model.User;
 import com.example.projekt.repository.RatingRepository;
-import com.example.projekt.repository.SubjectDictRepository;
 import com.example.projekt.repository.TeacherRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

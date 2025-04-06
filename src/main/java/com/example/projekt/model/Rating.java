@@ -11,7 +11,7 @@ import org.springframework.beans.BeanUtils;
 
 import java.util.List;
 
-@Entity(name = "ratings")
+@Entity
 @NoArgsConstructor
 @ToString
 @Getter

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Entity(name = "teachers")
+@Entity
 @NoArgsConstructor
 @Setter
 @Getter
@@ -40,4 +40,7 @@ public class Teacher extends User {
 
     @ManyToMany
     private List<Location> locations = new ArrayList<>();
+
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<PinnedStudent> students = new ArrayList<>();
 }
