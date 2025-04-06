@@ -22,8 +22,8 @@ public class LessonService {
 
     public void addLessonSlots(List<LessonSlotDto> lessonSlotDto, Teacher teacher) {
         for (LessonSlotDto day : lessonSlotDto) {
-            var date = day.getDate();
-            for (LocalTime time : day.getTimeList()) {
+            var date = day.date();
+            for (LocalTime time : day.timeList()) {
                 if(lessonSlotRepository.existsLessonSlotByDateAndTimeAndTeacher(date, time, teacher)){
                     throw new RuntimeException("Lesson slot for " + date + " " + time + "already exists");
                 }

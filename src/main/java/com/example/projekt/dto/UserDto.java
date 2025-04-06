@@ -1,18 +1,12 @@
 package com.example.projekt.dto;
 
-import lombok.*;
-
 import java.sql.Date;
 
-@Setter
-@ToString
-@Getter
-@RequiredArgsConstructor
-public class UserDto {
-    protected String username;
-    protected String password;
-    protected String email;
-    protected String firstName;
-    protected String lastName;
-    protected Date birthDate;
+public record UserDto(String username,
+               String password,
+               String email,
+               String firstName,
+               String lastName,
+               Date birthDate) {
+
 }

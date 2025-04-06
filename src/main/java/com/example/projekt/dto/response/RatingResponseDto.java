@@ -1,31 +1,18 @@
 package com.example.projekt.dto.response;
 
 import com.example.projekt.model.Rating;
-import com.example.projekt.model.SubjectDict;
-import lombok.Data;
+import com.example.projekt.model.Teacher;
+import com.example.projekt.model.User;
 
-import java.util.List;
 
-@Data
-public class RatingResponseDto {
-    private int id;
-
-    private int value;
-
-    private String content;
-
-    private ShortUserResponseDto user ;
-
-    private ShortUserResponseDto teacher;
-
-    private List<SubjectDict> subjectDict;
-
-    public RatingResponseDto(Rating rating) {
-        this.id = rating.getId();
-        this.value = rating.getValue();
-        this.content = rating.getContent();
-        this.user = new ShortUserResponseDto(rating.getUser());
-        this.teacher = new ShortUserResponseDto(rating.getTeacher());
-        this.subjectDict = rating.getSubjectDict();
+public record RatingResponseDto(
+        int id,
+        int value,
+        String content,
+        ShortUserResponseDto user,
+        ShortUserResponseDto teacher
+) {
+    public RatingResponseDto(Rating rating, User user, Teacher teacher){
+        this(rating.getId(), rating.getValue(), rating.getContent(), new ShortUserResponseDto(user), new ShortUserResponseDto(teacher));
     }
 }

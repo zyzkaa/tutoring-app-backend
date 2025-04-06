@@ -2,6 +2,7 @@ package com.example.projekt.service;
 
 import com.example.projekt.dto.TeacherDetailsDto;
 import com.example.projekt.dto.UserDto;
+import com.example.projekt.dto.response.TeacherWithRatingAndPrice;
 import com.example.projekt.exception.UsernameAlreadyExistsException;
 import com.example.projekt.model.*;
 import com.example.projekt.repository.*;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +28,8 @@ public class TeacherService {
     private final LocationRepository locationRepository;
 
     public Teacher addTeacher(UserDto teacherData) {
-        if(userRepository.existsByUsername(teacherData.getUsername())) {
-            throw new UsernameAlreadyExistsException(teacherData.getUsername());
+        if(userRepository.existsByUsername(teacherData.username())) {
+            throw new UsernameAlreadyExistsException(teacherData.username());
         }
 
         return teacherRepository.save(PasswordHelper.encodePassword(new Teacher(teacherData)));
@@ -41,41 +43,33 @@ public class TeacherService {
     @Transactional
     public Teacher addDetails(TeacherDetailsDto teacherDetailsDto, Teacher teacher, HttpServletRequest request) {
         subjectDetailsRepository.deleteByTeacherId(teacher.getId()); // se if it works
-        teacher.setDescription(teacherDetailsDto.getDescription());
+        teacher.setDescription(teacherDetailsDto.description());
 
-        var subjectList = new ArrayList<SubjectDetails>();
-        teacherDetailsDto.getSubjects().forEach(subject -> {
-            var schoolPriceList = new ArrayList<SchoolPrice>();
+        teacher.setSubjectDetails(
+                teacherDetailsDto.subjects().stream().
+                        map(subjectDto -> {
+                            var schoolPriceList = subjectDto.schoolPrices()
+                                    .stream().map(schoolPriceDto -> {
+                                        return new SchoolPrice(
+                                                schoolDictRepository.findById(schoolPriceDto.schoolId())
+                                                        .orElseThrow(() -> new EntityNotFoundException("School id not found")),
+                                                schoolPriceDto.price());
+                                    })
+                                    .collect(Collectors.toList());
+                            return new SubjectDetails(
+                                    subjectDictRepository.findById(subjectDto.subjectId())
+                                            .orElseThrow(() -> new EntityNotFoundException("Subject id not found")),
+                                    schoolPriceList,
+                                    teacher);
+                        }).collect(Collectors.toList()));
 
-            subject.getSchoolPrices().forEach(schoolPrice -> {
-                var newSchoolPrice = new SchoolPrice(
-                        schoolDictRepository.findById(schoolPrice.getSchoolId())
-                                .orElseThrow(() -> new EntityNotFoundException("School id not found")),
-                        schoolPrice.getPrice()
-                );
+        var locationList = teacherDetailsDto.locations()
+                .stream()
+                .map(locationDto -> locationRepository.findLocationByTownAndDistrict(locationDto.town(), locationDto.district())
+                            .orElseGet(() -> locationRepository.save(new Location(locationDto.town(), locationDto.district()))))
+                        .collect(Collectors.toList());
 
-                schoolPriceList.add(newSchoolPrice);
-            });
-
-            var newSubject = new SubjectDetails(
-                    subjectDictRepository.findById(subject.getSubjectId())
-                            .orElseThrow(() -> new EntityNotFoundException("Subject id not found")),
-                    schoolPriceList,
-                    teacher
-            );
-
-            subjectList.add(newSubject);
-        });
-        teacher.setSubjectDetails(subjectList);
-
-        var locationList = new ArrayList<Location>();
-        for(TeacherDetailsDto.LocationDto locationDto : teacherDetailsDto.getLocations()) {
-            var location = locationRepository.findLocationByTownAndDistrict(locationDto.getTown(), locationDto.getDistrict())
-                    .orElseGet(() -> locationRepository.save(new Location(locationDto.getTown(), locationDto.getDistrict())));
-
-            locationList.add(location);
-        }
-        teacher.setLocations(locationList); // will the new ones save?????????????
+        teacher.setLocations(locationList);
 
         return teacherRepository.save(teacher);
     }
@@ -83,5 +77,9 @@ public class TeacherService {
     public Teacher getByUsername(String username) {
         return teacherRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("Teacher not found"));
+    }
+
+    public List<TeacherWithRatingAndPrice> getTeachersBySubject(Integer subjectId) {
+        return teacherRepository.findWithAvgRating();
     }
 }

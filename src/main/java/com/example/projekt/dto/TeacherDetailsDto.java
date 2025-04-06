@@ -4,28 +4,24 @@ import lombok.Data;
 
 import java.util.List;
 
-@Data
-public class TeacherDetailsDto {
-    @Data
-    public static class SchoolPriceDto{
-        private int schoolId;
-        private float price;
-    }
+public record TeacherDetailsDto(
+        String description,
+        List<SubjectListDto> subjects,
+        List<LocationDto> locations
+){
+    public record SubjectListDto(
+            int subjectId,
+            boolean maturaR,
+            List<SchoolPriceDto> schoolPrices
+    ){}
 
-    @Data
-    public static class SubjectListDto {
-        private int subjectId;
-        private List<SchoolPriceDto> schoolPrices;
-        private boolean isMaturaR; // nazwa do zmiany
-    }
+    public record SchoolPriceDto(
+            int schoolId,
+            float price
+    ){}
 
-    private String description;
-    private List<SubjectListDto> subjects;
-
-    @Data
-    public static class LocationDto {
-        private String town;
-        private String district;
-    }
-    private List<LocationDto> locations;
+    public record LocationDto(
+            String town,
+            String district
+    ){}
 }
