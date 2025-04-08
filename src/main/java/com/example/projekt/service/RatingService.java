@@ -22,7 +22,7 @@ public class RatingService {
     @Transactional
     public Rating addRating(RatingDto ratingDto, User user) {
         var teacher = teacherRepository.findById(UUID.fromString(ratingDto.teacherId()))
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("No teacher with id " + ratingDto.teacherId()));
 
         return ratingRepository.save(new Rating(ratingDto, user, teacher));
     }

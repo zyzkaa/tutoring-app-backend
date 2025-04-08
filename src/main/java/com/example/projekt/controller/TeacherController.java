@@ -53,22 +53,24 @@ public class TeacherController {
         return ResponseEntity.ok(teacherService.findTeachers(teacherFilter)
                 .stream().map(
                         teacher -> {
+                            var teacherEntity = teacher.teacher();
                             Double price = null;
                             if(teacherFilter.subjectId() == null || teacherFilter.schoolId() == null) {
-                                var prices = teacher.getSubjectDetails().stream()
+                                var prices = teacherEntity.getSubjectDetails().stream()
                                         .flatMap(subjectDetails -> subjectDetails.getSchoolPrices().stream()
                                                 .map(schoolPrice -> schoolPrice.getPrice()
                                                 )).collect(Collectors.toSet());
                                 price = prices.stream().min(Comparator.naturalOrder()).orElse(null);
                             } else {
-                                price = teacher.getSubjectDetails().getFirst().getSchoolPrices().getFirst().getPrice();
+                                price = teacherEntity.getSubjectDetails().getFirst().getSchoolPrices().getFirst().getPrice();
                             }
 
                             return new TeacherSearchResponseDto(
-                                    teacher.getFirstName(),
-                                    teacher.getLastName(),
-                                    teacher.getId(),
-                                    price
+                                    teacherEntity.getFirstName(),
+                                    teacherEntity.getLastName(),
+                                    teacherEntity.getId(),
+                                    price,
+                                    teacher.avgRating()
                                     );
                         }
                 ).collect(Collectors.toList()));

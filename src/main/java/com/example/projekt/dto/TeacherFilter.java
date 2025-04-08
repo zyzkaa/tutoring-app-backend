@@ -1,5 +1,8 @@
 package com.example.projekt.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import lombok.NonNull;
+
 import java.util.List;
 
 public record TeacherFilter(
@@ -7,6 +10,8 @@ public record TeacherFilter(
         Long subjectId,
         Long schoolId,
         Double minPrice,
-        Double maxPrice
+        Double maxPrice,
+        int page,
+        int size
 ) {
 }

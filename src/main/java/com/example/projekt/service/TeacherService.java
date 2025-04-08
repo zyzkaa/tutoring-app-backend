@@ -2,6 +2,7 @@ package com.example.projekt.service;
 
 import com.example.projekt.dto.TeacherDetailsDto;
 import com.example.projekt.dto.TeacherFilter;
+import com.example.projekt.dto.TeacherWithRatingFilter;
 import com.example.projekt.dto.UserDto;
 import com.example.projekt.dto.response.*;
 import com.example.projekt.exception.UsernameAlreadyExistsException;
@@ -142,12 +143,9 @@ public class TeacherService {
         teacherRepository.save(sessionTeacher);
     }
 
-    public List<Teacher> findTeachers(TeacherFilter teacherFilter) {
-//        Specification<Teacher> specification = Specification.where(null);
-//        specification = specification.and(TeacherSpecification.hasSubject(teacherFilter.subjectId()));
-//        return teacherRepository.findAll(specification);
+    public List<TeacherWithRatingFilter> findTeachers(TeacherFilter teacherFilter) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Teacher> teacherCriteria = cb.createQuery(Teacher.class);
+        CriteriaQuery<TeacherWithRatingFilter> teacherCriteria = cb.createQuery(TeacherWithRatingFilter.class);
         Root<Teacher> teacherRoot = teacherCriteria.from(Teacher.class);
 
         Join<Teacher, SubjectDetails> subjectDetails = teacherRoot.join("subjectDetails", JoinType.LEFT);
@@ -155,8 +153,11 @@ public class TeacherService {
         Join<SubjectDetails, SchoolPrice> schoolPrices = subjectDetails.join("schoolPrices", JoinType.LEFT);
         Join<SchoolPrice, SchoolDict> schoolDict = schoolPrices.join("school", JoinType.LEFT);
         Join<Teacher, Location> location = teacherRoot.join("locations", JoinType.LEFT);
+        Join<Teacher, Rating> rating = teacherRoot.join("ratings", JoinType.LEFT);
 
         List<Predicate> predicates = new ArrayList<>();
+
+        teacherCriteria.groupBy(teacherRoot.get("id"));
 
         if(teacherFilter.locationId() != null && !teacherFilter.locationId().isEmpty()){
             predicates.add(location.get("id").in(teacherFilter.locationId()));
@@ -196,19 +197,33 @@ public class TeacherService {
             teacherCriteria.where(cb.and(predicates.toArray(new Predicate[0])));
         }
 
+        teacherCriteria.select(
+                cb.construct(
+                        TeacherWithRatingFilter.class,
+                        teacherRoot,
+                        cb.avg(rating.get("value"))
+                )
+        );
+
         teacherCriteria.distinct(true);
-        var teachers = entityManager.createQuery(teacherCriteria).getResultList();
+
+        //can be wrapped in Page
+        // first page is 0
+        var teachers = entityManager.createQuery(teacherCriteria)
+                .setFirstResult(teacherFilter.page() * teacherFilter.size())
+                .setMaxResults(teacherFilter.size())
+                .getResultList();
 
         teachers.forEach(teacher -> {
-            teacher.getSubjectDetails().forEach(subjectDetail -> {
+            teacher.teacher().getSubjectDetails().forEach(subjectDetail -> {
                 List<SchoolPrice> filteredSchoolPrice = subjectDetail.getSchoolPrices().stream()
                         .filter(sp -> (teacherFilter.schoolId() == null || sp.getSchool().getId() == teacherFilter.schoolId())).toList();
                 subjectDetail.setSchoolPrices(filteredSchoolPrice);
             });
-            List<SubjectDetails> filteredSubjectDetails = teacher.getSubjectDetails().stream()
+            List<SubjectDetails> filteredSubjectDetails = teacher.teacher().getSubjectDetails().stream()
                     .filter(sd ->
                             (teacherFilter.subjectId() == null || sd.getSubject().getId() == teacherFilter.subjectId())).toList();
-            teacher.setSubjectDetails(filteredSubjectDetails);
+            teacher.teacher().setSubjectDetails(filteredSubjectDetails);
         });
 
         return teachers;

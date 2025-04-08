@@ -43,4 +43,7 @@ public class Teacher extends User {
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<PinnedStudent> students = new ArrayList<>();
+
+    @OneToMany(mappedBy = "teacher")
+    private List<Rating> ratings = new ArrayList<>();
 }
