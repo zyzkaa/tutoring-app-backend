@@ -39,4 +39,5 @@ public interface TeacherRepository extends JpaRepository<Teacher, UUID>, JpaSpec
 
     Teacher getTeacherById(UUID id);
 
+    Optional<Teacher> findByEmail(String email);
 }

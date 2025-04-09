@@ -34,6 +34,10 @@ public class LessonSlot {
     @JsonIgnore
     private User student;
 
+    private boolean studentConfirmed = false;
+    private boolean teacherConfirmed = false;
+    private LessonMode mode;
+
     private LocalDate date;
     private LocalTime time;
     private double price;

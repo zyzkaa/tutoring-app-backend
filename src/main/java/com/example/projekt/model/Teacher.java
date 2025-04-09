@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +23,10 @@ import java.util.List;
 public class Teacher extends User {
     public Teacher(UserDto userDto){
         super(userDto);
+    }
+
+    public Teacher(OidcUser oidcUser){
+        super(oidcUser);
     }
 
     @Nullable

@@ -26,9 +26,9 @@ import java.util.stream.Collectors;
 public class TeacherController {
     private final TeacherService teacherService;
 
-    @GetMapping("/{subject}")
-    public ResponseEntity<List<Teacher>> getTeachersBySubject(@PathVariable String subject, @RequestParam(required = false) List<String> localization) {
-        return ResponseEntity.ok(teacherService.getAllTeachers());
+    @GetMapping("/")
+    public ResponseEntity<String> getTeachersBySubject() {
+        return ResponseEntity.ok("main page");
     }
 
     @PreAuthorize("hasRole('TEACHER')")

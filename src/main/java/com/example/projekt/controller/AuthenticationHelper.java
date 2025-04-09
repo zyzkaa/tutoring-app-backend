@@ -1,6 +1,8 @@
 package com.example.projekt.controller;
 
+import com.example.projekt.model.User;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,17 +18,26 @@ import org.springframework.stereotype.Component;
 public class AuthenticationHelper {
     private final AuthenticationManager authenticationManager;
 
-    public ResponseEntity<String> login (String username, String password, HttpServletRequest request) {
+    public ResponseEntity<String> login (String email, String password, HttpServletRequest request, HttpSession session) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password)
+                    new UsernamePasswordAuthenticationToken(email, password)
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            return ResponseEntity.ok("zalogowano jako " + username);
+            session.removeAttribute("register_role");
+            session.removeAttribute("flow");
+
+            return ResponseEntity.ok("zalogowano jako " + email);
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Błąd logowania: " + e.getMessage());
         }
+    }
+
+    public void loginAfterOAuth2(User user, HttpServletRequest request, HttpSession session) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities());
+        authenticationToken.setAuthenticated(true);
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 }

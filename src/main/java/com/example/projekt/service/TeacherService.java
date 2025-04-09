@@ -5,7 +5,7 @@ import com.example.projekt.dto.TeacherFilter;
 import com.example.projekt.dto.TeacherWithRatingFilter;
 import com.example.projekt.dto.UserDto;
 import com.example.projekt.dto.response.*;
-import com.example.projekt.exception.UsernameAlreadyExistsException;
+import com.example.projekt.exception.EmailAlreadyExistsException;
 import com.example.projekt.model.*;
 import com.example.projekt.repository.*;
 import jakarta.persistence.EntityManager;
@@ -36,8 +36,8 @@ public class TeacherService {
     private final EntityManager entityManager;
 
     public Teacher addTeacher(UserDto teacherData) {
-        if(userRepository.existsByUsername(teacherData.username())) {
-            throw new UsernameAlreadyExistsException(teacherData.username());
+        if(userRepository.existsByEmail(teacherData.email())) {
+            throw new EmailAlreadyExistsException(teacherData.username());
         }
 
         return teacherRepository.save(PasswordHelper.encodePassword(new Teacher(teacherData)));

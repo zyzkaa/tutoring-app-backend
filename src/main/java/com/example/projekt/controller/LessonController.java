@@ -2,6 +2,7 @@ package com.example.projekt.controller;
 
 import com.example.projekt.dto.LessonSlotDto;
 import com.example.projekt.dto.response.TeacherResponseDto;
+import com.example.projekt.model.LessonMode;
 import com.example.projekt.model.LessonSlot;
 import com.example.projekt.model.Teacher;
 import com.example.projekt.model.User;
@@ -15,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,9 +38,20 @@ public class LessonController {
 //    }
 
     @PreAuthorize("hasRole('USER')")
-    @PatchMapping("/book/{subjectId}/{schoolId}")
-    public ResponseEntity<List<LessonSlot>> bookSlots(@RequestBody List<Integer> idList, @AuthenticationPrincipal User user, @PathVariable int subjectId, @PathVariable int schoolId) {
-        return ResponseEntity.ok(lessonService.bookLessonSlots(user, idList, subjectId, schoolId));
+    @PatchMapping("/book/{mode}/{subjectId}/{schoolId}")
+    public ResponseEntity<List<LessonSlot>> bookSlots(@RequestBody List<Integer> idList, @AuthenticationPrincipal User user, @PathVariable int subjectId, @PathVariable int schoolId, @PathVariable LessonMode mode) {
+        return ResponseEntity.ok(lessonService.bookLessonSlots(user, idList, subjectId, schoolId, mode));
+    }
+
+    @PreAuthorize("hasRole('TEACHER')")
+    @PatchMapping("/book/{mode}/{userId}/{subjectId}/{schoolId}")
+    public ResponseEntity<List<LessonSlot>> bookAsTeacher(@RequestBody List<Integer> idList, @PathVariable int subjectId, @PathVariable int schoolId, @PathVariable UUID userId, @PathVariable LessonMode mode){
+        return ResponseEntity.ok(lessonService.bookAsTeacher(idList, subjectId, schoolId, userId, mode));
+    }
+
+    @GetMapping("/pending")
+    public ResponseEntity<List<LessonSlot>> getPendingSlots(@AuthenticationPrincipal User user){
+        return ResponseEntity.ok(lessonService.getPendingLessonSlots(user));
     }
 
     @PatchMapping("/{id}") // change to list of ids?
@@ -66,6 +79,10 @@ public class LessonController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
+    @PatchMapping("/confirm")
+    public ResponseEntity<Void> confirmLesson(@AuthenticationPrincipal User user, @RequestBody List<Integer> idList) {
+        lessonService.confirmSlots(user, idList);
+        return ResponseEntity.ok().build();
+    }
 
 }

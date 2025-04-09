@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class LessonService {
     private final TeacherRepository teacherRepository;
     private final SubjectDetailsRepository subjectDetailsRepository;
     private final SchoolPriceRepository schoolPriceRepository;
+    private final UserRepository userRepository;
 
     public void addLessonSlots(List<LessonSlotDto> lessonSlotDto, Teacher teacher) {
         for (LessonSlotDto day : lessonSlotDto) {
@@ -61,14 +63,13 @@ public class LessonService {
         lessonSlotRepository.save(slot);
     }
 
-    public List<LessonSlot> bookLessonSlots(User user, List<Integer> idList, int subjectId, int schoolId) {
+
+    public List<LessonSlot> bookLessonSlots(User user, List<Integer> idList, int subjectId, int schoolId, LessonMode mode) {
         if(lessonSlotRepository.countDistinctTeacherByIdIn(idList) > 1) {
-//            System.out.println("wynik: " + lessonSlotRepository.countDistinctTeacherByIdIn(idList));
             throw new RuntimeException("Cannot book lesson with diffrent teachers at once");
         }
 
-        var slots = lessonSlotRepository.findLessonSlotByIdIsIn(idList)
-                .orElseThrow(() -> new EntityNotFoundException("No lesson slot found with one or more ids: " + idList));
+        var slots = lessonSlotRepository.findLessonSlotByIdIsIn(idList);
 
         var teacher = slots.getFirst().getTeacher();
         var subjectDetails = subjectDetailsRepository.findSubjectDetailsByTeacherAndSubjectId(teacher, subjectId)
@@ -79,16 +80,19 @@ public class LessonService {
         var subject = subjectDetails.getSubject();
         var school = schoolPrice.getSchool();
 
-        for(LessonSlot slot : slots){
+        slots = slots.stream().peek(slot -> {
             if(slot.getState() != LessonState.AVAILABLE) {
                 throw new RuntimeException("Lesson with id " + slot.getId() + " is not available");
             }
-            slot.setState(LessonState.BOOKED);
+            slot.setState(LessonState.PENDING);
+            slot.setStudentConfirmed(true);
             slot.setStudent(user);
             slot.setSubject(subject);
             slot.setPrice(price);
             slot.setSchool(school);
-        }
+            slot.setMode(mode);
+        }).toList();
+
         return lessonSlotRepository.saveAll(slots);
     }
 
@@ -99,6 +103,56 @@ public class LessonService {
             throw new RuntimeException("Lesson with id " + slot.getId() + " is not available");
         }
         slot.setState(LessonState.CANCELLED);
+        slot.setMode(null);
         return lessonSlotRepository.save(slot);
+    }
+
+    public List<LessonSlot> bookAsTeacher(List<Integer> idList, int subjectId, int schoolId, UUID userId, LessonMode mode){
+        var user = userRepository.getUserById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("No user found for id: " + userId));
+        var slots = this.bookLessonSlots(user, idList, subjectId, schoolId, mode)
+                .stream()
+                .peek(slot -> {
+                    slot.setStudentConfirmed(false);
+                    slot.setTeacherConfirmed(true);
+                }).toList();
+        return lessonSlotRepository.saveAll(slots);
+    }
+
+    public List<LessonSlot> getPendingLessonSlots(User user){
+        var role = user.getAuthorities().toString();
+        if(role.equals("ROLE_USER")){
+            return lessonSlotRepository.findLessonSlotsByStudentAndState(user, LessonState.PENDING);
+        } else if(role.equals("ROLE_TEACHER")){
+            return lessonSlotRepository.findLessonSlotsByTeacherAndState((Teacher) user, LessonState.PENDING);
+        }
+        return null;
+    }
+
+    public void confirmSlots(User user, List<Integer> idList){
+        var role = user.getAuthorities().toString();
+        var slots = lessonSlotRepository.findLessonSlotByIdIsIn(idList);
+        if(role.equals("ROLE_USER")){
+            slots = slots.stream().peek(slot -> {
+                if(!slot.getStudent().equals(user)) {
+                    throw new RuntimeException("Cannot confirm slot with different student");
+                }
+                slot.setStudentConfirmed(true);
+                if(slot.isTeacherConfirmed()){
+                    slot.setState(LessonState.BOOKED);
+                }
+            }).toList();
+        } else if(role.equals("ROLE_TEACHER")){
+            slots = slots.stream().peek(slot -> {
+                if(!slot.getTeacher().equals(user)) {
+                    throw new RuntimeException("Cannot confirm slot with different student");
+                }
+                slot.setStudentConfirmed(true);
+                if(slot.isStudentConfirmed()){
+                    slot.setState(LessonState.BOOKED);
+                }
+            }).toList();
+        }
+        lessonSlotRepository.saveAll(slots);
     }
 }

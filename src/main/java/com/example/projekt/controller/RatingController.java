@@ -5,6 +5,7 @@ import com.example.projekt.dto.response.RatingResponseDto;
 import com.example.projekt.model.Rating;
 import com.example.projekt.model.User;
 import com.example.projekt.service.RatingService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class RatingController {
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/add")
-    public ResponseEntity<RatingResponseDto> addRating(@RequestBody RatingDto ratingDto, @AuthenticationPrincipal User user){
+    public ResponseEntity<RatingResponseDto> addRating(@RequestBody @Valid RatingDto ratingDto, @AuthenticationPrincipal User user){
         return ResponseEntity.ok(new RatingResponseDto(ratingService.addRating(ratingDto, user)));
     }
 

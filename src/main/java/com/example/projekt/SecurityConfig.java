@@ -1,6 +1,7 @@
 package com.example.projekt;
 
 import com.example.projekt.service.MyUserDetailsService;
+import com.example.projekt.service.MyUserService;
 import com.example.projekt.service.PasswordHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -13,8 +14,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -22,12 +21,10 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
-    MyUserDetailsService myUserDetailsService;
-
-    SecurityConfig(MyUserDetailsService myUserDetailsService) {
-        this.myUserDetailsService = myUserDetailsService;
-    }
+    private final MyUserDetailsService myUserDetailsService;
+    private final MyUserService myUserService;
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
@@ -54,7 +51,16 @@ public class SecurityConfig {
 //                        .anyRequest().authenticated()
                         .anyRequest().permitAll())
                 .securityContext(context -> context.requireExplicitSave(false))
-                .logout(AbstractHttpConfigurer::disable);
+                .logout(AbstractHttpConfigurer::disable)
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .oidcUserService(myUserService))
+                        .loginPage("/auth/login")
+                        .defaultSuccessUrl("/auth/test")
+//                        .defaultSuccessUrl("/auth/oauth2/login")
+                )
+                .logout(logout -> logout.logoutUrl("/"));
+
 
         return http.build();
     }

@@ -8,5 +8,7 @@ public record UserDto(String username,
                String firstName,
                String lastName,
                Date birthDate) {
-
+    public UserDto(String email){
+        this("", "", email, "", "", null);
+    }
 }

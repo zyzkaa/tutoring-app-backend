@@ -6,4 +6,5 @@ public enum LessonState{
     COMPLETED,
     MISSED,
     CANCELLED,
+    PENDING
 }
