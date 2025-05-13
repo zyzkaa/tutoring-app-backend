@@ -20,4 +20,9 @@ public class LocationController {
     public ResponseEntity<List<Location>> getLocationsByTown(@PathVariable String town) {
         return ResponseEntity.ok(locationService.getLocationsByTown(town));
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Location>> getAllLocations() {
+        return ResponseEntity.ok(locationService.getAllLocations());
+    }
 }

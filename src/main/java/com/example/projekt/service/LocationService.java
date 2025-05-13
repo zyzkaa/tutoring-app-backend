@@ -15,4 +15,8 @@ public class LocationService {
     public List<Location> getLocationsByTown(String town) {
         return locationRepository.findLocationByTownContainingIgnoreCase(town);
     }
+
+    public List<Location> getAllLocations() {
+        return locationRepository.findAll();
+    }
 }
