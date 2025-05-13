@@ -85,11 +85,6 @@ public class TeacherService {
                 .orElseThrow(() -> new EntityNotFoundException("Teacher not found"));
     }
 
-    public List<TeacherWithRatingAndPrice> getTeachersBySubject(Integer subjectId) {
-//        return teacherRepository.findWithAvgRating();
-        return null;
-    }
-
     public TeacherProfileResponseDto getTeacherProfile(Teacher teacher){
         var todayLessons = lessonSlotRepository.getLessonSlotByStateAndDate(LessonState.BOOKED, LocalDate.now());
         var recentPayments = paymentRepository.findTop5ByOrderByDateAsc();

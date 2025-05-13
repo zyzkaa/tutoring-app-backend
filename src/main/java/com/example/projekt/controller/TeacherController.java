@@ -26,11 +26,6 @@ import java.util.stream.Collectors;
 public class TeacherController {
     private final TeacherService teacherService;
 
-    @GetMapping("/")
-    public ResponseEntity<String> getTeachersBySubject() {
-        return ResponseEntity.ok("main page");
-    }
-
     @PreAuthorize("hasRole('TEACHER')")
     @PutMapping("/me")
     public ResponseEntity<TeacherResponseDto> editTeacherInfo(@RequestBody TeacherDetailsDto teacherDetailsDto, @AuthenticationPrincipal Teacher teacher, HttpServletRequest request) {

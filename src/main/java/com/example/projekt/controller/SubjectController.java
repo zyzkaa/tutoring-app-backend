@@ -23,9 +23,5 @@ public class SubjectController {
     public ResponseEntity<List<SubjectDict>> getSubjects() {
         return ResponseEntity.ok(subjectService.getSubjects());
     }
-
-    @GetMapping()
-    public ResponseEntity<List<TeacherWithRatingAndPrice>> getTeachersBySubject(@RequestParam(required = false) Integer subjectId) {
-        return ResponseEntity.ok(teacherService.getTeachersBySubject(subjectId));
-    }
 }
+
