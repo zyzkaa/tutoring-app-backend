@@ -7,6 +7,8 @@ public record TeacherSearchResponseDto(
         String lastName,
         UUID id,
         Double price,
-        Double avgRating
+        Double avgRating,
+        String description,
+        Long ratingCount
 ) {
 }

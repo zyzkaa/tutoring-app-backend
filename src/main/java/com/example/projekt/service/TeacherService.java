@@ -196,13 +196,14 @@ public class TeacherService {
                 cb.construct(
                         TeacherWithRatingFilter.class,
                         teacherRoot,
-                        cb.avg(rating.get("value"))
+                        cb.avg(rating.get("value")),
+                        cb.count(rating.get("value"))
                 )
         );
 
         teacherCriteria.distinct(true);
 
-        //can be wrapped in Page
+        //  can be wrapped in Page
         // first page is 0
         var teachers = entityManager.createQuery(teacherCriteria)
                 .setFirstResult(teacherFilter.page() * teacherFilter.size())

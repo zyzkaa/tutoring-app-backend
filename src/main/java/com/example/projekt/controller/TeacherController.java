@@ -65,7 +65,9 @@ public class TeacherController {
                                     teacherEntity.getLastName(),
                                     teacherEntity.getId(),
                                     price,
-                                    teacher.avgRating()
+                                    teacher.avgRating(),
+                                    teacherEntity.getDescription(),
+                                    teacher.ratingCount()
                                     );
                         }
                 ).collect(Collectors.toList()));

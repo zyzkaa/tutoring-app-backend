@@ -4,6 +4,7 @@ import com.example.projekt.model.Teacher;
 
 public record TeacherWithRatingFilter(
         Teacher teacher,
-        Double avgRating
+        Double avgRating,
+        Long ratingCount
 ) {
 }
