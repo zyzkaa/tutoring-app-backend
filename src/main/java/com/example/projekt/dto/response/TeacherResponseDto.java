@@ -11,7 +11,7 @@ public record TeacherResponseDto (
         String description,
         List<SubjectDetails> subjects,
         List<Location> locations,
-        UserResponseDto userResponseDto
+        UserResponseDto user
 ){
     public TeacherResponseDto (Teacher teacher){
         this(teacher.getDescription(), teacher.getSubjectDetails(), teacher.getLocations(), new UserResponseDto(teacher));

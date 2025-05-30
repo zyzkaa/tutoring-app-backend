@@ -116,7 +116,8 @@ public class TeacherService {
                                     payment,
                                     new ShortUserResponseDto(payment.getLesson().getStudent())
                             );
-                        }).toList()
+                        }).toList(),
+                new TeacherResponseDto(teacherRepository.getTeacherById(teacher.getId()))
         );
     }
 
