@@ -21,18 +21,17 @@ public interface TeacherRepository extends JpaRepository<Teacher, UUID>, JpaSpec
                count(distinct ls.student.id)
            )    from Teacher t
     left join Rating r on r.teacher = t
-    left join LessonSlot ls on ls.teacher = t
+    left join LessonSlot ls on ls.teacher = t and ls.state = 'COMPLETED'
     where t = :teacher
-    and ls.state = 'COMPLETED'
     group by t.id
 """)
     TeacherProfileDataDto findProfileData(Teacher teacher);
 
     @Query("""
-    select sum(ls.price) from Teacher t
-    left join LessonSlot ls on ls.teacher = t
+    select coalesce(sum(ls.price), 0) 
+    from Teacher t
+    left join LessonSlot ls on ls.teacher = t and ls.state = 'COMPLETED'
     where t = :teacher
-    and ls.state = 'COMPLETED'
     group by t.id
 """)
     Double getLessonsPricesSum(Teacher teacher);
