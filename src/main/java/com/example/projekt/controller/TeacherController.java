@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.AbstractMap;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -38,9 +39,9 @@ public class TeacherController {
         return ResponseEntity.ok(teacherService.getTeacherProfile(teacher));
     }
 
-    @GetMapping("/{username}") // make it return all profile data
-    public ResponseEntity<TeacherResponseDto> getTeacherInfo(@PathVariable String username) {
-        return ResponseEntity.ok(new TeacherResponseDto(teacherService.getByUsername(username)));
+    @GetMapping("/{id}")
+    public ResponseEntity<TeacherResponseDto> getTeacherInfo(@PathVariable UUID id) {
+        return ResponseEntity.ok(new TeacherResponseDto(teacherService.getById(id)));
     }
 
     @PostMapping()

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -82,6 +83,11 @@ public class TeacherService {
 
     public Teacher getByUsername(String username) {
         return teacherRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("Teacher not found"));
+    }
+
+    public Teacher getById(UUID id) {
+        return teacherRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Teacher not found"));
     }
 
