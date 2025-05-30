@@ -52,9 +52,20 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-//                        .requestMatchers("/register", "/login", "/teacher/register").permitAll()
-//                        .anyRequest().authenticated()
-                        .anyRequest().permitAll())
+                        .requestMatchers(
+                                "/register",
+                                "/login",
+                                "/teacher/register",
+                                "/auth/set_teacher",
+                                "/auth/set_user",
+                                "user/register",
+                                "/location/**",
+                                "/subject/**",
+                                "/teacher/*",
+                                "/users/getAll", // usun
+                                "/users/*").permitAll()
+                        .anyRequest().authenticated())
+//                        .anyRequest().permitAll())
                 .securityContext(context -> context.requireExplicitSave(false))
                 .logout(AbstractHttpConfigurer::disable)
                 .oauth2Login(oauth2 -> oauth2
