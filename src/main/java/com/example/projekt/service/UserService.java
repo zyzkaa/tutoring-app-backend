@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 @RequiredArgsConstructor
@@ -58,5 +59,12 @@ public class UserService {
 
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    public User deleteById(UUID id) {
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("No user found with id: " + id));
+        userRepository.deleteById(id);
+        return user;
     }
 }

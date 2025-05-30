@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,7 +35,6 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletRequest request, HttpSession session) throws Exception {
 //        AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
-        session.setAttribute("flow", "login");
         return authenticationHelper.login(loginDto.email(), loginDto.password(), request, session);
     }
 
@@ -47,9 +47,15 @@ public class AuthenticationController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/reg")
-    public String reg(HttpSession session) {
+    @GetMapping("/set_teacher")
+    public String setTeacher(HttpSession session) {
         session.setAttribute("register_role", "user");
+        return "success";
+    }
+
+    @GetMapping("/set_user")
+    public String set(HttpSession session) {
+        session.setAttribute("register_role", "teacher");
         return "success";
     }
 
@@ -72,6 +78,11 @@ public class AuthenticationController {
     @GetMapping("/test") // delete this
     public String test(@AuthenticationPrincipal User user) {
         return user.getEmail() + " " + user.getAttributes().toString();
+    }
+
+    @GetMapping("/role")
+    public String getRole(@AuthenticationPrincipal User user) {
+        return user.getAuthorities().toString();
     }
 //
 //    @GetMapping("/oauth2/login")

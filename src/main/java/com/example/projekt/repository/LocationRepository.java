@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LocationRepository extends JpaRepository<Location, Integer> {
-    Optional<Location> findLocationByTownAndDistrict(@NotBlank String town, String district);
+    Optional<Location> findLocationByTownAndDistrictIgnoreCase(@NotBlank String town, String district);
 
     List<Location> findLocationByTownContainingIgnoreCase(@NotBlank String town);
 }

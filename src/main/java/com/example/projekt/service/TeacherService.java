@@ -72,7 +72,7 @@ public class TeacherService {
 
         var locationList = teacherDetailsDto.locations()
                 .stream()
-                .map(locationDto -> locationRepository.findLocationByTownAndDistrict(locationDto.town(), locationDto.district())
+                .map(locationDto -> locationRepository.findLocationByTownAndDistrictIgnoreCase(locationDto.town(), locationDto.district())
                             .orElseGet(() -> locationRepository.save(new Location(locationDto.town(), locationDto.district()))))
                         .collect(Collectors.toList());
 

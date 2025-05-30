@@ -12,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -48,4 +49,10 @@ public class UserController {
     public ResponseEntity<UserResponseDto> getUserInfo(@PathVariable String username) {
         return ResponseEntity.ok(new UserResponseDto(userService.getUserByUsername(username)));
     }
+
+    @DeleteMapping("/{id}") // usun to
+    public ResponseEntity<UserResponseDto> deleteById(@PathVariable UUID id){
+        return ResponseEntity.ok(new UserResponseDto(userService.deleteById(id)));
+    }
+
 }
