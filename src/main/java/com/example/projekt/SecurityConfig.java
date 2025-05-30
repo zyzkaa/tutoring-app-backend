@@ -3,6 +3,7 @@ package com.example.projekt;
 import com.example.projekt.service.MyUserDetailsService;
 import com.example.projekt.service.MyUserService;
 import com.example.projekt.service.PasswordHelper;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,19 +53,33 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-//                        .requestMatchers("/register", "/login", "/teacher/register").permitAll()
-//                        .anyRequest().authenticated()
-                        .anyRequest().permitAll())
+                        .requestMatchers(
+                                "/auth/login",
+                                "/auth/teacher/register",
+                                "/auth/set_teacher",
+                                "/auth/set_user",
+                                "/auth/user/register",
+                                "/location/**",
+                                "/subject/**",
+                                "/teacher/*",
+                                "/users/getAll", // usun
+                                "/users/*").permitAll()
+                        .anyRequest().authenticated())
+//                        .anyRequest().permitAll())
                 .securityContext(context -> context.requireExplicitSave(false))
                 .logout(AbstractHttpConfigurer::disable)
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
                                 .oidcUserService(myUserService))
-                        .loginPage("/auth/login")
+//                        .loginPage("/auth/login")
                         .defaultSuccessUrl("/auth/test")
 //                        .defaultSuccessUrl("/auth/oauth2/login")
                 )
-                .logout(logout -> logout.logoutUrl("/"));
+                .logout(logout -> logout.logoutUrl("/"))
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                        }));
 
         return http.build();
     }
