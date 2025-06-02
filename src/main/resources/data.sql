@@ -1,14 +1,14 @@
-INSERT INTO school_dict (name) VALUES ('High School');
-INSERT INTO school_dict (name) VALUES ('University');
-INSERT INTO school_dict (name) VALUES ('Primary School');
+INSERT INTO school_dict (name) VALUES ('Szkoła średnia');
+INSERT INTO school_dict (name) VALUES ('Studia');
+INSERT INTO school_dict (name) VALUES ('Szkoła podstawowa');
 
-INSERT INTO subject_dict (name) VALUES ('Mathematics');
-INSERT INTO subject_dict (name) VALUES ('Physics');
-INSERT INTO subject_dict (name) VALUES ('Computer Science');
-INSERT INTO subject_dict (name) VALUES ('History');
-INSERT INTO subject_dict (name) VALUES ('Biology');
-INSERT INTO subject_dict (name) VALUES ('Chemistry');
-INSERT INTO subject_dict (name) VALUES ('English');
+INSERT INTO subject_dict (name) VALUES ('Matematyka');
+INSERT INTO subject_dict (name) VALUES ('Fizyka');
+INSERT INTO subject_dict (name) VALUES ('Informatyka');
+INSERT INTO subject_dict (name) VALUES ('Historia');
+INSERT INTO subject_dict (name) VALUES ('Biologia');
+INSERT INTO subject_dict (name) VALUES ('Chemia');
+INSERT INTO subject_dict (name) VALUES ('Angielski');
 
 INSERT INTO location (town, district) VALUES ('Warszawa', 'Mokotów');
 INSERT INTO location (town, district) VALUES ('Warszawa', 'Wola');
