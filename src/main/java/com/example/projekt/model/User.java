@@ -28,10 +28,9 @@ public class User implements UserDetails, OidcUser {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-//    @Column(unique = true)
     private String username;
     private String password;
-//    @Column(unique = true)
+    @Column(unique = true)
     private String email;
     private String firstName;
     private String lastName;

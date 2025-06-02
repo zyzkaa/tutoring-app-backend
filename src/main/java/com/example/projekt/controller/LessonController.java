@@ -32,11 +32,6 @@ public class LessonController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-//    @PatchMapping("/{id}") // mabye delete this????
-//    public ResponseEntity<LessonSlot> bookSlot(@PathVariable Long id, @AuthenticationPrincipal User user) {
-//        return ResponseEntity.ok(lessonService.bookLessonSlot(id, user));
-//    }
-
     @PreAuthorize("hasRole('USER')")
     @PatchMapping("/book/{mode}/{subjectId}/{schoolId}")
     public ResponseEntity<List<LessonSlot>> bookSlots(@RequestBody List<Integer> idList, @AuthenticationPrincipal User user, @PathVariable int subjectId, @PathVariable int schoolId, @PathVariable LessonMode mode) {

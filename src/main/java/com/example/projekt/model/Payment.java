@@ -20,6 +20,4 @@ public class Payment {
     @OneToOne
     private LessonSlot lesson;
     private LocalDateTime date;
-
-//    private String status;
 }

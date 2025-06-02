@@ -29,7 +29,6 @@ public class SubjectDetails {
     @ManyToOne
     private SubjectDict subject;
 
-//    @OneToMany(cascade = CascadeType.ALL, )
     @OneToMany(mappedBy = "subjectDetails", cascade = CascadeType.ALL)
     private List<SchoolPrice> schoolPrices;
 

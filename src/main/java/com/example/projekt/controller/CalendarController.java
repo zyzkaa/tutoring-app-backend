@@ -24,6 +24,5 @@ public class CalendarController {
 
         googleCalendarService.addLessonsToCalendar((OAuth2AuthenticationToken) authentication);
         return ResponseEntity.status(HttpStatus.CREATED).build();
-
     }
 }

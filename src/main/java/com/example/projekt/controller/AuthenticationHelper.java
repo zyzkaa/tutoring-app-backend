@@ -34,10 +34,4 @@ public class AuthenticationHelper {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Błąd logowania: " + e.getMessage());
         }
     }
-
-    public void loginAfterOAuth2(User user, HttpServletRequest request, HttpSession session) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities());
-        authenticationToken.setAuthenticated(true);
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-    }
 }

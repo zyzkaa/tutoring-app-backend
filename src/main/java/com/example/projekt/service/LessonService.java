@@ -15,9 +15,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class LessonService {
     private final LessonSlotRepository lessonSlotRepository;
-    private final SubjectDictRepository subjectDictRepository;
-    private final TeacherService teacherService;
-    private final TeacherRepository teacherRepository;
     private final SubjectDetailsRepository subjectDetailsRepository;
     private final SchoolPriceRepository schoolPriceRepository;
     private final UserRepository userRepository;

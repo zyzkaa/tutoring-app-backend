@@ -210,8 +210,6 @@ public class TeacherService {
 
         teacherCriteria.distinct(true);
 
-        //  can be wrapped in Page
-        // first page is 0
         var teachers = entityManager.createQuery(teacherCriteria)
                 .setFirstResult(teacherFilter.page() * teacherFilter.size())
                 .setMaxResults(teacherFilter.size())

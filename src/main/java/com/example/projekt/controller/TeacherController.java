@@ -73,35 +73,4 @@ public class TeacherController {
                         }
                 ).collect(Collectors.toList()));
     }
-
-//    @PreAuthorize("hasRole('TEACHER')")
-//    @PostMapping("/students/{id}")
-//    public ResponseEntity<Void> addStudentToList(@PathVariable UUID id, @AuthenticationPrincipal Teacher teacher){
-//        teacherService.addStudentToList(id, teacher);
-//        return ResponseEntity.status(HttpStatus.CREATED).build();
-//    }
-//
-//    @PreAuthorize("hasRole('TEACHER')")
-//    @DeleteMapping("/students/{id}")
-//    public ResponseEntity<Void> removeStudentFromList(@PathVariable UUID id, @AuthenticationPrincipal Teacher teacher){
-//        teacherService.addStudentToList(id, teacher);
-//        return ResponseEntity.ok().build();
-//    }
-
-
-//    @GetMapping("/{username}/ratings")
-//    public ResponseEntity<List<RatingResponseDto>> getTeacherRatings(@PathVariable String username) {
-//        var ratings = ratingService.getRatingsByTeacherUsername(username);
-//        var ratingResponseDtos = new ArrayList<RatingResponseDto>();
-//
-//        for(Rating rating : ratings){
-//            ratingResponseDtos.add(new RatingResponseDto(rating));
-//        }
-//        return ResponseEntity.ok(ratingResponseDtos);
-//    }
-
-    //    @PostMapping("/me")
-//    public ResponseEntity<TeacherResponseDto> addTeacherDetails(@RequestBody TeacherDetailsDto teacherDetailsDto, @AuthenticationPrincipal Teacher teacher, HttpServletRequest request) {
-//        return ResponseEntity.ok(new TeacherResponseDto(teacherService.addDetails(teacherDetailsDto, teacher, request)));
-//    }
 }

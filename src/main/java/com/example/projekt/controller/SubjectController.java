@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SubjectController {
     private final SubjectService subjectService;
-    private final TeacherService teacherService;
 
     @GetMapping("/all")
     public ResponseEntity<List<SubjectDict>> getSubjects() {

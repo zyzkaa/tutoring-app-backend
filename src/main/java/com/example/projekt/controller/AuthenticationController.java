@@ -29,12 +29,10 @@ public class AuthenticationController {
     private final UserService userService;
     private final TeacherService teacherService;
     private final UserRepository userRepository;
-//    private final AuthenticationConfiguration authenticationConfiguration;
 
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletRequest request, HttpSession session) throws Exception {
-//        AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
         return authenticationHelper.login(loginDto.email(), loginDto.password(), request, session);
     }
 
@@ -61,7 +59,6 @@ public class AuthenticationController {
 
     @PostMapping("/user/register")
     public ResponseEntity<UserResponseDto> addUser(@RequestBody UserDto userData, HttpServletRequest request, HttpSession session) throws Exception {
-//        session.setAttribute("register_role", "user");
         var user = userService.createUser(userData);
         authenticationHelper.login(userData.email(), userData.password(), request, session);
         return ResponseEntity.ok(new UserResponseDto(user));
@@ -69,7 +66,6 @@ public class AuthenticationController {
 
     @PostMapping("/teacher/register")
     public ResponseEntity<TeacherResponseDto> addTeacher(@RequestBody UserDto teacherRegisterDto, HttpServletRequest request, HttpSession session) throws Exception {
-//        session.setAttribute("register_role", "teacher");
         var teacher = teacherService.addTeacher(teacherRegisterDto);
         authenticationHelper.login(teacherRegisterDto.email(), teacherRegisterDto.password(), request, session);
         return ResponseEntity.ok(new TeacherResponseDto(teacher));
@@ -84,17 +80,4 @@ public class AuthenticationController {
     public String getRole(@AuthenticationPrincipal User user) {
         return user.getAuthorities().toString();
     }
-//
-//    @GetMapping("/oauth2/login")
-//    public void loginAfterOAuth2(@AuthenticationPrincipal OAuth2User oAuth2User, HttpServletResponse response, HttpServletRequest request, HttpSession session) throws Exception {
-//        String email = oAuth2User.getAttribute("email");
-//        if(userService.existsByEmail(email)){
-//            login(new LoginDto(email), request, session);
-//        } else if(session.getAttribute("register_role").equals("user")) {
-//            addUser(new UserDto(email), request, session);
-//        } else {
-//            addTeacher(new UserDto(email), request, session);
-//        }
-//        response.sendRedirect("/auth/test");
-//    }
 }
