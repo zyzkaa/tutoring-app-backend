@@ -7,10 +7,11 @@ import java.util.UUID;
 
 public record ShortUserResponseDto(
         UUID id,
-        String username, // change to first name?
+        String firstName,
+        String lastName,
         String role
 ){
     public ShortUserResponseDto(User user){
-        this(user.getId(), user.getUsername(), user.getAuthorities().toString());
+        this(user.getId(), user.getFirstName(), user.getLastName(), user.getAuthorities().toString());
     }
 }
