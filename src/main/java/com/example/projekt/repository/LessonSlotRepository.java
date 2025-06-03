@@ -39,4 +39,5 @@ public interface LessonSlotRepository extends JpaRepository<LessonSlot, Integer>
     List<LessonSlot> findLessonSlotsByStudentEmailAndState(String studentEmail, LessonState state);
 
     List<LessonSlot> findLessonSlotsByTeacherEmailAndState(String email, LessonState lessonState);
+
 }

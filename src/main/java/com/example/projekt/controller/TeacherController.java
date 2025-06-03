@@ -2,9 +2,7 @@ package com.example.projekt.controller;
 
 import com.example.projekt.dto.TeacherDetailsDto;
 import com.example.projekt.dto.TeacherFilter;
-import com.example.projekt.dto.response.TeacherProfileResponseDto;
-import com.example.projekt.dto.response.TeacherResponseDto;
-import com.example.projekt.dto.response.TeacherSearchResponseDto;
+import com.example.projekt.dto.response.*;
 import com.example.projekt.model.SchoolPrice;
 import com.example.projekt.model.Teacher;
 import com.example.projekt.service.TeacherService;
@@ -42,6 +40,13 @@ public class TeacherController {
     @GetMapping("/{id}")
     public ResponseEntity<TeacherResponseDto> getTeacherInfo(@PathVariable UUID id) {
         return ResponseEntity.ok(new TeacherResponseDto(teacherService.getById(id)));
+    }
+
+    @PreAuthorize("hasRole('TEACHER')")
+    @GetMapping("/students")
+    public ResponseEntity<List<CompletedLessonResponseDto>> getAllStudents(@AuthenticationPrincipal Teacher teacher, HttpServletRequest request) {
+        return ResponseEntity.ok(teacherService.findAllCompletedLessons(teacher).stream().map(CompletedLessonResponseDto::new)
+                .collect(Collectors.toList()));
     }
 
     @PostMapping()

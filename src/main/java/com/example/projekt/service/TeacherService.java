@@ -145,6 +145,10 @@ public class TeacherService {
         teacherRepository.save(sessionTeacher);
     }
 
+    public List<LessonSlot> findAllCompletedLessons(Teacher teacher){
+        return lessonSlotRepository.findLessonSlotsByTeacherAndState(teacher, LessonState.COMPLETED);
+    }
+
     public List<TeacherWithRatingFilter> findTeachers(TeacherFilter teacherFilter) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<TeacherWithRatingFilter> teacherCriteria = cb.createQuery(TeacherWithRatingFilter.class);
